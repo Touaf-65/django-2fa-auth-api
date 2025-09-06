@@ -2,9 +2,39 @@
 Modèle User étendu pour l'authentification 2FA
 """
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
+
+
+class UserManager(BaseUserManager):
+    """
+    Manager personnalisé pour le modèle User
+    """
+    
+    def create_user(self, email, password=None, **extra_fields):
+        """Crée et sauvegarde un utilisateur avec l'email donné et le mot de passe"""
+        if not email:
+            raise ValueError('L\'email doit être défini')
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, email, password=None, **extra_fields):
+        """Crée et sauvegarde un superutilisateur avec l'email donné et le mot de passe"""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_verified', True)
+        
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Le superutilisateur doit avoir is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Le superutilisateur doit avoir is_superuser=True.')
+        
+        return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -114,6 +144,9 @@ class User(AbstractUser):
     
     # Champs Django par défaut à ignorer
     username = None
+    
+    # Manager personnalisé
+    objects = UserManager()
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
