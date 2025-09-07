@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue sur {{ site_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .welcome-title {
+            color: #28a745;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .highlight {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .security-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ site_name }}</div>
+            <p>Votre plateforme sécurisée</p>
+        </div>
+        
+        <h1 class="welcome-title">🎉 Bienvenue {{ user.first_name }} !</h1>
+        
+        <div class="content">
+            <p>Félicitations ! Votre compte a été créé avec succès sur {{ site_name }}.</p>
+            
+            <div class="highlight">
+                <strong>📧 Email :</strong> {{ user.email }}<br>
+                <strong>👤 Nom d'utilisateur :</strong> {{ user.username }}<br>
+                <strong>📅 Date d'inscription :</strong> {{ user.date_joined|date:"d/m/Y à H:i" }}
+            </div>
+            
+            <p>Votre compte est maintenant actif et vous pouvez commencer à utiliser toutes nos fonctionnalités :</p>
+            <ul>
+                <li>✅ Authentification sécurisée avec 2FA</li>
+                <li>🔐 Gestion de profil personnalisée</li>
+                <li>📱 Notifications en temps réel</li>
+                <li>🛡️ Protection avancée de vos données</li>
+            </ul>
+            
+            <div class="security-note">
+                <strong>🔒 Note de sécurité :</strong><br>
+                Pour renforcer la sécurité de votre compte, nous vous recommandons d'activer l'authentification à deux facteurs (2FA) dans vos paramètres de sécurité.
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ site_url }}/api/auth/2fa/setup/" class="button">Activer la 2FA</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Si vous n'avez pas créé ce compte, veuillez ignorer cet email.</p>
+            <p>© {{ current_year }} {{ site_name }}. Tous droits réservés.</p>
+            <p><a href="{{ site_url }}">Visiter le site</a> | <a href="{{ site_url }}/contact">Support</a></p>
+        </div>
+    </div>
+</body>
+</html>

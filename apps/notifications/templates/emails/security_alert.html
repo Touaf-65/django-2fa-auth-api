@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerte de sécurité - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #dc3545;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .alert-title {
+            color: #dc3545;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .alert-info {
+            background-color: #f8d7da;
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            margin: 20px 0;
+        }
+        .security-warning {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .urgent {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ site_name }}</div>
+            <p>🚨 Alerte de sécurité</p>
+        </div>
+        
+        <div class="urgent">
+            ⚠️ ALERTE DE SÉCURITÉ - ACTION REQUISE ⚠️
+        </div>
+        
+        <h1 class="alert-title">🛡️ Alerte de sécurité</h1>
+        
+        <div class="content">
+            <p>Bonjour {{ user.first_name }},</p>
+            
+            <p>Nous avons détecté une activité suspecte sur votre compte {{ site_name }} qui nécessite votre attention immédiate.</p>
+            
+            <div class="alert-info">
+                <strong>🚨 Type d'alerte :</strong> {{ alert_type }}<br>
+                <strong>👤 Utilisateur :</strong> {{ user.username }}<br>
+                <strong>📧 Email :</strong> {{ user.email }}<br>
+                <strong>🕐 Date et heure :</strong> {{ alert_time|date:"d/m/Y à H:i" }}<br>
+                <strong>🌍 Adresse IP :</strong> {{ ip_address }}<br>
+                <strong>🖥️ Navigateur :</strong> {{ user_agent|truncatechars:50 }}<br>
+                <strong>📍 Localisation :</strong> {{ location|default:"Non disponible" }}
+            </div>
+            
+            <div class="security-warning">
+                <strong>🔍 Détails de l'alerte :</strong><br>
+                {{ alert_description }}
+                
+                <br><br><strong>📋 Actions recommandées :</strong>
+                <ul>
+                    {% for action in recommended_actions %}
+                        <li>{{ action }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ site_url }}/api/auth/logout/" class="button">Révoquer toutes les sessions</a>
+            </div>
+            
+            <p><strong>🛡️ Mesures de sécurité immédiates :</strong></p>
+            <ol>
+                <li><strong>Changez votre mot de passe</strong> immédiatement</li>
+                <li><strong>Activez la 2FA</strong> si ce n'est pas déjà fait</li>
+                <li><strong>Vérifiez votre activité récente</strong> sur le compte</li>
+                <li><strong>Contactez notre support</strong> si vous suspectez une compromission</li>
+            </ol>
+            
+            <p><strong>🔒 Prévention future :</strong></p>
+            <ul>
+                <li>✅ Utilisez des mots de passe uniques et forts</li>
+                <li>✅ Activez l'authentification à deux facteurs</li>
+                <li>✅ Ne partagez jamais vos identifiants</li>
+                <li>✅ Déconnectez-vous des appareils publics</li>
+                <li>✅ Surveillez régulièrement votre activité</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p><strong>⚠️ Si vous n'avez pas effectué cette action, contactez-nous immédiatement.</strong></p>
+            <p>© {{ current_year }} {{ site_name }}. Tous droits réservés.</p>
+            <p><a href="{{ site_url }}">Visiter le site</a> | <a href="{{ site_url }}/contact">Support d'urgence</a></p>
+        </div>
+    </div>
+</body>
+</html>

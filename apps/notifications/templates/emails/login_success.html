@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion réussie - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .success-title {
+            color: #28a745;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .login-info {
+            background-color: #d4edda;
+            padding: 15px;
+            border-left: 4px solid #28a745;
+            margin: 20px 0;
+        }
+        .security-alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ site_name }}</div>
+            <p>Notification de sécurité</p>
+        </div>
+        
+        <h1 class="success-title">🔐 Connexion réussie</h1>
+        
+        <div class="content">
+            <p>Bonjour {{ user.first_name }},</p>
+            
+            <p>Une connexion à votre compte a été détectée avec succès.</p>
+            
+            <div class="login-info">
+                <strong>📊 Détails de la connexion :</strong><br>
+                <strong>👤 Utilisateur :</strong> {{ user.username }}<br>
+                <strong>📧 Email :</strong> {{ user.email }}<br>
+                <strong>🕐 Date et heure :</strong> {{ login_time|date:"d/m/Y à H:i" }}<br>
+                <strong>🌍 Adresse IP :</strong> {{ ip_address }}<br>
+                <strong>🖥️ Navigateur :</strong> {{ user_agent|truncatechars:50 }}<br>
+                <strong>📍 Localisation :</strong> {{ location|default:"Non disponible" }}
+            </div>
+            
+            <div class="security-alert">
+                <strong>⚠️ Important :</strong><br>
+                Si cette connexion ne provient pas de vous, veuillez immédiatement :
+                <ul>
+                    <li>Changer votre mot de passe</li>
+                    <li>Révoquer toutes les sessions actives</li>
+                    <li>Contacter notre support</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ site_url }}/api/auth/logout/" class="button">Révoquer toutes les sessions</a>
+            </div>
+            
+            <p>Pour votre sécurité, nous vous recommandons d'activer l'authentification à deux facteurs si ce n'est pas déjà fait.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement pour votre sécurité.</p>
+            <p>© {{ current_year }} {{ site_name }}. Tous droits réservés.</p>
+            <p><a href="{{ site_url }}">Visiter le site</a> | <a href="{{ site_url }}/contact">Support</a></p>
+        </div>
+    </div>
+</body>
+</html>
