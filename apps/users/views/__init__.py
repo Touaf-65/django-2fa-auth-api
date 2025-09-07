@@ -1,0 +1,41 @@
+from .user_profile_views import (
+    user_profile,
+    user_profile_update,
+    user_preferences,
+    user_activity,
+    create_user_profile,
+    delete_user_profile,
+    user_profile_stats,
+)
+from .user_relationship_views import (
+    user_list,
+    user_search,
+    user_follow,
+    user_unfollow,
+    user_followers,
+    user_following,
+    user_block,
+    user_unblock,
+    user_blocked,
+    user_stats,
+)
+
+__all__ = [
+    'user_profile',
+    'user_profile_update',
+    'user_preferences',
+    'user_activity',
+    'create_user_profile',
+    'delete_user_profile',
+    'user_profile_stats',
+    'user_list',
+    'user_search',
+    'user_follow',
+    'user_unfollow',
+    'user_followers',
+    'user_following',
+    'user_block',
+    'user_unblock',
+    'user_blocked',
+    'user_stats',
+]
