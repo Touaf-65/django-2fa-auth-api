@@ -184,6 +184,25 @@ DEFAULT_FROM_EMAIL = config('FROM_EMAIL', default='noreply@localhost')
 SITE_NAME = config('SITE_NAME', default='Django 2FA Auth API')
 SITE_URL = config('SITE_URL', default='http://localhost:8000')
 
+# Templates
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            BASE_DIR / 'apps' / 'notifications' / 'templates',
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True

@@ -22,8 +22,17 @@ CACHES = {
     }
 }
 
-# Email backend pour le développement (console)
+# Email - Configuration pour développement (console)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = config('FROM_EMAIL', default='noreply@localhost')
+
+# Pour activer SendGrid, décommentez les lignes suivantes et configurez votre clé API
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY', default='')
 
 # CORS pour le développement
 CORS_ALLOWED_ORIGINS = [

@@ -130,6 +130,11 @@ class UserSession(models.Model):
     def create_session(cls, user, session_key, request):
         """Crée une nouvelle session pour un utilisateur"""
         from django.utils import timezone
+        import uuid
+        
+        # Si pas de session_key, en générer une
+        if not session_key:
+            session_key = str(uuid.uuid4())
         
         # Extraire les informations du device
         device_info = cls._extract_device_info(request)
