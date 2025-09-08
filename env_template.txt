@@ -1,0 +1,182 @@
+# ===========================================
+# DJANGO 2FA AUTH API - Configuration
+# ===========================================
+# Copiez ce fichier vers .env et remplissez vos vraies valeurs
+
+# ===========================================
+# BASE DE DONNÉES
+# ===========================================
+# SQLite (développement)
+DATABASE_URL=sqlite:///db.sqlite3
+
+# PostgreSQL (production) - Exemple
+# DATABASE_URL=postgresql://username:password@localhost:5432/django_2fa_auth
+
+# MySQL (production) - Exemple
+# DATABASE_URL=mysql://username:password@localhost:3306/django_2fa_auth
+
+# ===========================================
+# DJANGO CORE
+# ===========================================
+# Clé secrète Django (GÉNÉREZ UNE NOUVELLE CLÉ POUR LA PRODUCTION !)
+SECRET_KEY=django-insecure-dev-key-change-this-in-production-very-important
+
+# Mode debug (True pour développement, False pour production)
+DEBUG=True
+
+# Hôtes autorisés (séparés par des virgules)
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+
+# ===========================================
+# EMAIL (SENDGRID)
+# ===========================================
+# Clé API SendGrid (obtenez-la depuis https://app.sendgrid.com/settings/api_keys)
+SENDGRID_API_KEY=your-sendgrid-api-key-here
+
+# Email expéditeur par défaut
+FROM_EMAIL=noreply@yourdomain.com
+
+# Nom de l'expéditeur
+FROM_NAME=Django 2FA Auth API
+
+# ===========================================
+# SMS (TWILIO)
+# ===========================================
+# Identifiants Twilio (obtenez-les depuis https://console.twilio.com/)
+TWILIO_ACCOUNT_SID=your-twilio-account-sid
+TWILIO_AUTH_TOKEN=your-twilio-auth-token
+
+# Numéro de téléphone Twilio (format: +1234567890)
+TWILIO_PHONE_NUMBER=+1234567890
+
+# ===========================================
+# PUSH NOTIFICATIONS (FIREBASE)
+# ===========================================
+# Clé serveur Firebase (obtenez-la depuis https://console.firebase.google.com/)
+FIREBASE_SERVER_KEY=your-firebase-server-key
+
+# URL de l'API Firebase
+FIREBASE_API_URL=https://fcm.googleapis.com/fcm/send
+
+# ===========================================
+# JWT (JSON WEB TOKENS)
+# ===========================================
+# Clé secrète JWT (différente de SECRET_KEY)
+JWT_SECRET_KEY=your-jwt-secret-key-change-this-in-production
+
+# Durée de vie du token d'accès (en minutes)
+JWT_ACCESS_TOKEN_LIMETIME=15
+
+# Durée de vie du token de rafraîchissement (en jours)
+JWT_REFRESH_TOKEN_LIMETIME=7
+
+# ===========================================
+# SÉCURITÉ
+# ===========================================
+# Limitation du taux de requêtes
+RATE_LIMIT_ENABLED=True
+
+# Nombre maximum de tentatives de connexion
+MAX_LOGIN_ATTEMPTS=5
+
+# Durée de verrouillage après échecs (en secondes)
+LOCKOUT_DURATION=900
+
+# Durée de session (en secondes)
+SESSION_COOKIE_AGE=86400
+
+# ===========================================
+# CORS (Cross-Origin Resource Sharing)
+# ===========================================
+# Origines autorisées (séparées par des virgules)
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:8080
+
+# ===========================================
+# REDIS (pour la production)
+# ===========================================
+# URL Redis pour le cache et les sessions
+REDIS_URL=redis://localhost:6379/0
+
+# ===========================================
+# SITE
+# ===========================================
+# Nom du site
+SITE_NAME=Django 2FA Auth API
+
+# URL du site
+SITE_URL=http://localhost:8000
+
+# ===========================================
+# ADMIN
+# ===========================================
+# Compte administrateur par défaut
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@yourdomain.com
+DJANGO_SUPERUSER_PASSWORD=admin123
+
+# ===========================================
+# LOGGING
+# ===========================================
+# Niveau de log (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+LOG_LEVEL=INFO
+
+# ===========================================
+# FICHIERS STATIQUES ET MÉDIAS
+# ===========================================
+# URL pour les fichiers statiques
+STATIC_URL=/static/
+
+# URL pour les fichiers médias
+MEDIA_URL=/media/
+
+# ===========================================
+# SÉCURITÉ HTTPS (PRODUCTION)
+# ===========================================
+# Forcer HTTPS en production
+SECURE_SSL_REDIRECT=False
+
+# Cookies sécurisés
+SECURE_BROWSER_XSS_FILTER=True
+SECURE_CONTENT_TYPE_NOSNIFF=True
+
+# ===========================================
+# MONITORING ET ANALYTICS
+# ===========================================
+# Sentry DSN pour le monitoring d'erreurs
+SENTRY_DSN=your-sentry-dsn-here
+
+# Google Analytics ID
+GOOGLE_ANALYTICS_ID=your-google-analytics-id
+
+# ===========================================
+# INTÉGRATIONS EXTERNES
+# ===========================================
+# Stripe (pour les paiements)
+STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
+STRIPE_SECRET_KEY=your-stripe-secret-key
+
+# AWS (pour le stockage de fichiers)
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_STORAGE_BUCKET_NAME=your-s3-bucket-name
+
+# ===========================================
+# DÉVELOPPEMENT
+# ===========================================
+# Activer Django Debug Toolbar
+DEBUG_TOOLBAR=True
+
+# Activer les logs SQL
+SQL_DEBUG=False
+
+# ===========================================
+# NOTES IMPORTANTES
+# ===========================================
+# 1. Ne jamais commiter le fichier .env dans Git
+# 2. Générer des clés uniques pour la production
+# 3. Utiliser des mots de passe forts
+# 4. Configurer HTTPS en production
+# 5. Sauvegarder régulièrement la base de données
+# 6. Monitorer les logs d'erreur
+# 7. Tester régulièrement les fonctionnalités 2FA
+

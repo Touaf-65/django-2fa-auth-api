@@ -201,3 +201,4 @@ def use_delegation(permission_codename=None, role_name=None):
             view_func.required_delegation = {'type': 'role', 'target': role_name}
         return view_func
     return decorator
+

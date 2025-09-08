@@ -1,0 +1,40 @@
+# ===========================================
+# DJANGO 2FA AUTH API - Configuration Minimale
+# ===========================================
+# Copiez ce fichier vers .env pour commencer rapidement
+
+# ===========================================
+# CONFIGURATION DE BASE (OBLIGATOIRE)
+# ===========================================
+SECRET_KEY=django-insecure-dev-key-change-this-in-production
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# ===========================================
+# EMAIL (SENDGRID) - POUR LES EMAILS RÉELS
+# ===========================================
+# Obtenez votre clé API depuis https://app.sendgrid.com/settings/api_keys
+SENDGRID_API_KEY=your-sendgrid-api-key-here
+FROM_EMAIL=noreply@yourdomain.com
+
+# ===========================================
+# SMS (TWILIO) - POUR LES SMS RÉELS
+# ===========================================
+# Obtenez vos identifiants depuis https://console.twilio.com/
+TWILIO_ACCOUNT_SID=your-twilio-account-sid
+TWILIO_AUTH_TOKEN=your-twilio-auth-token
+TWILIO_PHONE_NUMBER=+1234567890
+
+# ===========================================
+# SITE
+# ===========================================
+SITE_NAME=Django 2FA Auth API
+SITE_URL=http://localhost:8000
+
+# ===========================================
+# ADMIN
+# ===========================================
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@yourdomain.com
+DJANGO_SUPERUSER_PASSWORD=admin123
+

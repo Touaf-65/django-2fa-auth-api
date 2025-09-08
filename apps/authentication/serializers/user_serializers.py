@@ -184,3 +184,4 @@ class UserLoginSerializer(serializers.Serializer):
                 "Email et mot de passe requis.",
                 code='authorization'
             )
+

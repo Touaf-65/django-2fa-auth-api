@@ -429,3 +429,4 @@ class ConditionalPermission(models.Model):
             value = getattr(value, attr)
         
         return value
+

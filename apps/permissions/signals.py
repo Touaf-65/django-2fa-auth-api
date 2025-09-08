@@ -14,3 +14,4 @@ def create_permission_manager_profile(sender, instance, created, **kwargs):
     """Crée automatiquement un profil de gestionnaire de permissions lors de la création d'un utilisateur"""
     if created:
         PermissionManager.get_or_create_for_user(instance)
+

@@ -222,3 +222,4 @@ class UserBlock(models.Model):
     def get_blocked_by_users(cls, user):
         """Retourne la liste des utilisateurs qui ont bloqué un utilisateur"""
         return cls.objects.filter(blocked=user, is_active=True).select_related('blocker')
+

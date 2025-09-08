@@ -253,3 +253,4 @@ def notification_template_detail(request, template_id):
     serializer = NotificationTemplateSerializer(template, context={'request': request})
     
     return Response(serializer.data, status=status.HTTP_200_OK)
+

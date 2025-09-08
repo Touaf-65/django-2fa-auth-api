@@ -24,3 +24,4 @@ class StandardResultsSetPagination(PageNumberPagination):
             'total_pages': self.page.paginator.num_pages,
             'page_size': self.get_page_size(self.request),
         })
+

@@ -415,3 +415,4 @@ class NotificationService:
         """
         # Cette fonctionnalité peut être étendue selon les besoins
         pass
+

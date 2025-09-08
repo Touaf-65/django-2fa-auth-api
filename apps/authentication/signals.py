@@ -49,3 +49,4 @@ def hash_password(sender, instance, **kwargs):
                 instance.set_password(instance.password)
         except User.DoesNotExist:
             pass
+

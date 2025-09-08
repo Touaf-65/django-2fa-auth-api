@@ -30,3 +30,4 @@ def create_user_profile_and_preferences(sender, instance, created, **kwargs):
             activity_type='account_created',
             description='Compte créé'
         )
+

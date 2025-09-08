@@ -412,3 +412,4 @@ class RoleDelegation(models.Model):
             queryset = queryset.filter(role=role)
         
         return queryset
+

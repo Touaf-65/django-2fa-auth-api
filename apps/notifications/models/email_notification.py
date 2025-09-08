@@ -249,3 +249,4 @@ class EmailNotification(models.Model):
             'reply_to': {'email': self.reply_to} if self.reply_to else None,
             'attachments': self.attachments
         }
+

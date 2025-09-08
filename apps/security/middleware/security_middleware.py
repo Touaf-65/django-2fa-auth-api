@@ -100,3 +100,4 @@ class SecurityMiddleware(MiddlewareMixin):
                 suspicious_indicators.append(f'Possible XSS dans le paramètre {key}')
         
         return suspicious_indicators
+

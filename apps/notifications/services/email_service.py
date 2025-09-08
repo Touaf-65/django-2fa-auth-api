@@ -169,3 +169,4 @@ class EmailService:
                 'error': str(e),
                 'provider': 'sendgrid'
             }
+

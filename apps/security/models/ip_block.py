@@ -201,3 +201,4 @@ class IPBlock(models.Model):
             return 0
         
         return int(remaining.total_seconds() / 60)
+

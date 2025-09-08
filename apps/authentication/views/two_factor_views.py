@@ -226,3 +226,4 @@ def two_factor_regenerate_backup_codes(request):
         return Response({
             'error': 'Configuration 2FA non trouvée.'
         }, status=status.HTTP_400_BAD_REQUEST)
+

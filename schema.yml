@@ -1,0 +1,2497 @@
+openapi: 3.0.3
+info:
+  title: Django 2FA Auth API
+  version: 1.0.0
+  x-logo:
+    url: https://www.djangoproject.com/s/img/logos/django-logo-positive.png
+    altText: Django Logo
+  description: "\n    API complète pour l'authentification Django avec 2FA, gestion\
+    \ des utilisateurs, \n    notifications, sécurité et système de permissions avancé.\n\
+    \    \n    ## Fonctionnalités principales :\n    - \U0001F510 Authentification\
+    \ JWT avec 2FA (TOTP + Email OTP)\n    - \U0001F465 Gestion avancée des utilisateurs\
+    \ et profils\n    - \U0001F4E7 Système de notifications multi-canaux (Email, SMS,\
+    \ Push)\n    - \U0001F6E1️ Sécurité avancée avec monitoring et rate limiting\n\
+    \    - \U0001F3AF Système de permissions granulaires avec délégations\n    - \U0001F4CA\
+    \ Audit complet de tous les accès\n    \n    ## Authentification :\n    Tous les\
+    \ endpoints (sauf inscription/connexion) nécessitent une authentification JWT.\n\
+    \    Utilisez le header : `Authorization: Bearer <access_token>`\n    \n    ##\
+    \ Permissions :\n    Le système de permissions est très granulaire et permet :\n\
+    \    - Permissions par champ spécifique\n    - Contraintes de valeur (min/max)\n\
+    \    - Permissions conditionnelles\n    - Délégations temporaires\n    - Rôles\
+    \ et groupes dynamiques\n    "
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+paths:
+  /api/auth/2fa/disable/:
+    post:
+      operationId: auth_2fa_disable_create
+      description: |-
+        Désactiver l'authentification à deux facteurs
+
+        POST /api/auth/2fa/disable/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/2fa/regenerate-backup-codes/:
+    post:
+      operationId: auth_2fa_regenerate_backup_codes_create
+      description: |-
+        Régénérer les codes de secours
+
+        POST /api/auth/2fa/regenerate-backup-codes/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/2fa/setup/:
+    post:
+      operationId: auth_2fa_setup_create
+      description: |-
+        Configurer l'authentification à deux facteurs
+
+        POST /api/auth/2fa/setup/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/2fa/status/:
+    get:
+      operationId: auth_2fa_status_retrieve
+      description: |-
+        Récupérer le statut de la 2FA
+
+        GET /api/auth/2fa/status/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/2fa/verify-login/:
+    post:
+      operationId: auth_2fa_verify_login_create
+      description: |-
+        Vérifier le code 2FA lors de la connexion
+
+        POST /api/auth/2fa/verify-login/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/2fa/verify-setup/:
+    post:
+      operationId: auth_2fa_verify_setup_create
+      description: |-
+        Vérifier et activer la configuration 2FA
+
+        POST /api/auth/2fa/verify-setup/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: |-
+        Déconnexion d'un utilisateur
+
+        POST /api/auth/logout/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      description: |-
+        Récupérer le profil de l'utilisateur connecté
+
+        GET /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/profile/update/:
+    put:
+      operationId: auth_profile_update_update
+      description: |-
+        Mettre à jour le profil de l'utilisateur connecté
+
+        PUT/PATCH /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: auth_profile_update_partial_update
+      description: |-
+        Mettre à jour le profil de l'utilisateur connecté
+
+        PUT/PATCH /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/signin/:
+    post:
+      operationId: user_login
+      description: "\n    Authentifie un utilisateur et retourne les tokens JWT.\n\
+        \    \n    **Processus :**\n    1. Vérification des identifiants\n    2. Génération\
+        \ des tokens JWT\n    3. Création d'une session\n    4. Envoi d'email de notification\n\
+        \    \n    **2FA :**\n    Si l'utilisateur a activé la 2FA, un code TOTP sera\
+        \ requis.\n    "
+      summary: Connexion utilisateur
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Connexion réussie
+                content:
+                  application/json:
+                    example:
+                      access: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                      refresh: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                      user:
+                        id: 1
+                        email: user@example.com
+                        first_name: John
+                        last_name: Doe
+                        is_2fa_enabled: false
+                      session_key: abc123def456
+              examples:
+                RéponseDeSuccès:
+                  value:
+                    access: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                    refresh: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                    user:
+                      id: 1
+                      email: user@example.com
+                      first_name: John
+                      last_name: Doe
+                      is_2fa_enabled: false
+                    session_key: abc123def456
+                  summary: Connexion réussie
+                  description: Tokens JWT retournés après connexion
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Identifiants invalides
+                content:
+                  application/json:
+                    example:
+                      error: Email ou mot de passe incorrect
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Code 2FA requis ou invalide
+                content:
+                  application/json:
+                    example:
+                      error: Code 2FA requis
+                      requires_2fa: true
+          description: ''
+  /api/auth/signup/:
+    post:
+      operationId: user_register
+      description: "\n    Crée un nouveau compte utilisateur avec validation email.\n\
+        \    \n    **Validation :**\n    - Email doit être unique\n    - Mot de passe\
+        \ minimum 8 caractères\n    - Prénom et nom requis\n    \n    **Réponse :**\n\
+        \    - 201 : Utilisateur créé avec succès\n    - 400 : Données invalides\n\
+        \    "
+      summary: Inscription d'un nouvel utilisateur
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: Utilisateur créé avec succès
+                content:
+                  application/json:
+                    example:
+                      id: 1
+                      email: user@example.com
+                      first_name: John
+                      last_name: Doe
+                      phone: '+1234567890'
+                      is_active: true
+                      date_joined: '2025-09-08T10:00:00Z'
+                      message: Utilisateur créé avec succès. Vérifiez votre email
+                        pour activer votre compte.
+              examples:
+                RéponseDeSuccès:
+                  value:
+                    id: 1
+                    email: user@example.com
+                    first_name: John
+                    last_name: Doe
+                    phone: '+1234567890'
+                    is_active: true
+                    date_joined: '2025-09-08T10:00:00Z'
+                    message: Utilisateur créé avec succès. Vérifiez votre email pour
+                      activer votre compte.
+                  summary: Utilisateur créé
+                  description: Réponse après création réussie
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Données invalides
+                content:
+                  application/json:
+                    example:
+                      email:
+                      - Un utilisateur avec cet email existe déjà.
+                      password:
+                      - Ce mot de passe est trop court. Il doit contenir au moins
+                        8 caractères.
+          description: ''
+  /api/auth/token/refresh/:
+    post:
+      operationId: token_refresh
+      description: "\n    Génère un nouveau token d'accès à partir du refresh token.\n\
+        \    \n    **Utilisation :**\n    - Utilisez le refresh token pour obtenir\
+        \ un nouveau access token\n    - Le refresh token expire après 7 jours\n \
+        \   - Les tokens sont automatiquement mis en blacklist après rotation\n  \
+        \  "
+      summary: Rafraîchir le token d'accès
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+            examples:
+              RefreshToken:
+                value:
+                  refresh: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                summary: Rafraîchir le token
+                description: Demande de nouveau token d'accès
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Nouveau token généré
+                content:
+                  application/json:
+                    example:
+                      access: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+              examples:
+                NouveauToken:
+                  value:
+                    access: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  summary: Nouveau token d'accès
+                  description: Nouveau token d'accès généré
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Refresh token invalide ou expiré
+                content:
+                  application/json:
+                    example:
+                      detail: Token is invalid or expired
+          description: ''
+  /api/notifications/:
+    get:
+      operationId: notifications_retrieve
+      description: |-
+        Liste les notifications de l'utilisateur connecté
+
+        GET /api/notifications/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/{notification_id}/:
+    get:
+      operationId: notifications_retrieve_2
+      description: |-
+        Récupère les détails d'une notification
+
+        GET /api/notifications/{notification_id}/
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/{notification_id}/cancel/:
+    delete:
+      operationId: notifications_cancel_destroy
+      description: |-
+        Annule une notification en attente
+
+        DELETE /api/notifications/{notification_id}/cancel/
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/notifications/{notification_id}/logs/:
+    get:
+      operationId: notifications_logs_retrieve
+      description: |-
+        Récupère les logs d'une notification
+
+        GET /api/notifications/{notification_id}/logs/
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/{notification_id}/retry/:
+    post:
+      operationId: notifications_retry_create
+      description: |-
+        Retente l'envoi d'une notification échouée
+
+        POST /api/notifications/{notification_id}/retry/
+      parameters:
+      - in: path
+        name: notification_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/create/:
+    post:
+      operationId: notifications_create_create
+      description: |-
+        Crée une nouvelle notification
+
+        POST /api/notifications/create/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/:
+    get:
+      operationId: notifications_emails_retrieve
+      description: |-
+        Liste les notifications email de l'utilisateur connecté
+
+        GET /api/notifications/emails/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/{email_id}/:
+    get:
+      operationId: notifications_emails_retrieve_2
+      description: |-
+        Récupère les détails d'une notification email
+
+        GET /api/notifications/emails/{email_id}/
+      parameters:
+      - in: path
+        name: email_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/bulk-send/:
+    post:
+      operationId: notifications_emails_bulk_send_create
+      description: |-
+        Envoie des emails en masse
+
+        POST /api/notifications/emails/bulk-send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/send/:
+    post:
+      operationId: notifications_emails_send_create
+      description: |-
+        Envoie un email
+
+        POST /api/notifications/emails/send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/templates/:
+    get:
+      operationId: notifications_emails_templates_retrieve
+      description: |-
+        Liste les templates d'emails disponibles
+
+        GET /api/notifications/emails/templates/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/templates/{template_id}/:
+    get:
+      operationId: notifications_emails_templates_retrieve_2
+      description: |-
+        Récupère les détails d'un template d'email
+
+        GET /api/notifications/emails/templates/{template_id}/
+      parameters:
+      - in: path
+        name: template_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/templates/{template_id}/delete/:
+    delete:
+      operationId: notifications_emails_templates_delete_destroy
+      description: |-
+        Supprime un template d'email
+
+        DELETE /api/notifications/emails/templates/{template_id}/delete/
+      parameters:
+      - in: path
+        name: template_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/notifications/emails/templates/{template_id}/update/:
+    put:
+      operationId: notifications_emails_templates_update_update
+      description: |-
+        Met à jour un template d'email
+
+        PUT/PATCH /api/notifications/emails/templates/{template_id}/update/
+      parameters:
+      - in: path
+        name: template_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: notifications_emails_templates_update_partial_update
+      description: |-
+        Met à jour un template d'email
+
+        PUT/PATCH /api/notifications/emails/templates/{template_id}/update/
+      parameters:
+      - in: path
+        name: template_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/emails/templates/create/:
+    post:
+      operationId: notifications_emails_templates_create_create
+      description: |-
+        Crée un nouveau template d'email
+
+        POST /api/notifications/emails/templates/create/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/:
+    get:
+      operationId: notifications_push_retrieve
+      description: |-
+        Liste les notifications push de l'utilisateur connecté
+
+        GET /api/notifications/push/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/{push_id}/:
+    get:
+      operationId: notifications_push_retrieve_2
+      description: |-
+        Récupère les détails d'une notification push
+
+        GET /api/notifications/push/{push_id}/
+      parameters:
+      - in: path
+        name: push_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/bulk-send/:
+    post:
+      operationId: notifications_push_bulk_send_create
+      description: |-
+        Envoie des notifications push en masse
+
+        POST /api/notifications/push/bulk-send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/send/:
+    post:
+      operationId: notifications_push_send_create
+      description: |-
+        Envoie une notification push
+
+        POST /api/notifications/push/send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/stats/:
+    get:
+      operationId: notifications_push_stats_retrieve
+      description: |-
+        Récupère les statistiques des notifications push
+
+        GET /api/notifications/push/stats/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/tokens/:
+    get:
+      operationId: notifications_push_tokens_retrieve
+      description: |-
+        Liste les tokens push de l'utilisateur connecté
+
+        GET /api/notifications/push/tokens/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/tokens/{token_id}/delete/:
+    delete:
+      operationId: notifications_push_tokens_delete_destroy
+      description: |-
+        Supprime un token push
+
+        DELETE /api/notifications/push/tokens/{token_id}/delete/
+      parameters:
+      - in: path
+        name: token_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/notifications/push/tokens/{token_id}/update/:
+    put:
+      operationId: notifications_push_tokens_update_update
+      description: |-
+        Met à jour un token push
+
+        PUT/PATCH /api/notifications/push/tokens/{token_id}/update/
+      parameters:
+      - in: path
+        name: token_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: notifications_push_tokens_update_partial_update
+      description: |-
+        Met à jour un token push
+
+        PUT/PATCH /api/notifications/push/tokens/{token_id}/update/
+      parameters:
+      - in: path
+        name: token_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/push/tokens/create/:
+    post:
+      operationId: notifications_push_tokens_create_create
+      description: |-
+        Crée un nouveau token push
+
+        POST /api/notifications/push/tokens/create/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/sms/:
+    get:
+      operationId: notifications_sms_retrieve
+      description: |-
+        Liste les notifications SMS de l'utilisateur connecté
+
+        GET /api/notifications/sms/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/sms/{sms_id}/:
+    get:
+      operationId: notifications_sms_retrieve_2
+      description: |-
+        Récupère les détails d'une notification SMS
+
+        GET /api/notifications/sms/{sms_id}/
+      parameters:
+      - in: path
+        name: sms_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/sms/bulk-send/:
+    post:
+      operationId: notifications_sms_bulk_send_create
+      description: |-
+        Envoie des SMS en masse
+
+        POST /api/notifications/sms/bulk-send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/sms/send/:
+    post:
+      operationId: notifications_sms_send_create
+      description: |-
+        Envoie un SMS
+
+        POST /api/notifications/sms/send/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/sms/stats/:
+    get:
+      operationId: notifications_sms_stats_retrieve
+      description: |-
+        Récupère les statistiques SMS
+
+        GET /api/notifications/sms/stats/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/stats/:
+    get:
+      operationId: notifications_stats_retrieve
+      description: |-
+        Récupère les statistiques des notifications
+
+        GET /api/notifications/stats/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/templates/:
+    get:
+      operationId: notifications_templates_retrieve
+      description: |-
+        Liste les templates de notifications disponibles
+
+        GET /api/notifications/templates/
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/templates/{template_id}/:
+    get:
+      operationId: notifications_templates_retrieve_2
+      description: |-
+        Récupère les détails d'un template de notification
+
+        GET /api/notifications/templates/{template_id}/
+      parameters:
+      - in: path
+        name: template_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/conditional-permissions/:
+    get:
+      operationId: permissions_conditional_permissions_retrieve
+      description: Liste toutes les permissions conditionnelles
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/conditional-permissions/{id}/:
+    get:
+      operationId: permissions_conditional_permissions_retrieve_2
+      description: Détails d'une permission conditionnelle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/delegations/stats/:
+    get:
+      operationId: permissions_delegations_stats_retrieve
+      description: Statistiques des délégations
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/group-memberships/:
+    get:
+      operationId: permissions_group_memberships_retrieve
+      description: Liste toutes les adhésions aux groupes
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/group-memberships/{id}/:
+    get:
+      operationId: permissions_group_memberships_retrieve_2
+      description: Détails d'une adhésion à un groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/group-roles/:
+    get:
+      operationId: permissions_group_roles_retrieve
+      description: Liste tous les rôles de groupes
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/group-roles/{id}/:
+    get:
+      operationId: permissions_group_roles_retrieve_2
+      description: Détails d'un rôle de groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/groups/:
+    get:
+      operationId: permissions_groups_retrieve
+      description: Liste tous les groupes
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/groups/{id}/:
+    get:
+      operationId: permissions_groups_retrieve_2
+      description: Détails d'un groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/groups/{id}/delete/:
+    delete:
+      operationId: permissions_groups_delete_destroy
+      description: Supprime un groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/permissions/groups/{id}/update/:
+    put:
+      operationId: permissions_groups_update_update
+      description: Met à jour un groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: permissions_groups_update_partial_update
+      description: Met à jour un groupe
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/groups/create/:
+    post:
+      operationId: permissions_groups_create_create
+      description: Crée un nouveau groupe
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/groups/stats/:
+    get:
+      operationId: permissions_groups_stats_retrieve
+      description: Statistiques des groupes
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-delegations/:
+    get:
+      operationId: permissions_permission_delegations_retrieve
+      description: Liste toutes les délégations de permissions
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-delegations/{id}/:
+    get:
+      operationId: permissions_permission_delegations_retrieve_2
+      description: Détails d'une délégation de permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-delegations/{id}/revoke/:
+    post:
+      operationId: permissions_permission_delegations_revoke_create
+      description: Révoque une délégation de permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-delegations/create/:
+    post:
+      operationId: create_permission_delegation
+      description: "\n    Crée une délégation temporaire de permission entre utilisateurs.\n\
+        \    \n    **Types de délégations :**\n    - **Délégation de permission**\
+        \ : Délégation d'une permission spécifique\n    - **Délégation de rôle** :\
+        \ Délégation d'un rôle complet\n    \n    **Contraintes de sécurité :**\n\
+        \    - Limitation par IP (optionnelle)\n    - Limitation par actions HTTP\
+        \ (optionnelle)\n    - Limitation par nombre d'utilisations\n    - Limitation\
+        \ temporelle (début/fin)\n    - Conditions supplémentaires (JSON)\n    \n\
+        \    **Cas d'usage :**\n    - Délégation temporaire pendant les vacances\n\
+        \    - Accès limité pour des consultants\n    - Permissions d'urgence avec\
+        \ restrictions\n    "
+      summary: Créer une délégation de permission
+      tags:
+      - Permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: Délégation créée avec succès
+              examples:
+                DélégationCréée:
+                  value:
+                    id: 1
+                    delegator:
+                      id: 1
+                      email: admin@example.com
+                      first_name: Admin
+                      last_name: User
+                    delegatee:
+                      id: 2
+                      email: temp@example.com
+                      first_name: Temp
+                      last_name: User
+                    permission:
+                      id: 1
+                      name: Can modify user salary
+                      codename: users.userprofile.change_salary
+                    start_date: '2025-09-08T10:00:00Z'
+                    end_date: '2025-09-15T18:00:00Z'
+                    max_uses: 10
+                    current_uses: 0
+                    allowed_ips:
+                    - 192.168.1.100
+                    allowed_actions:
+                    - GET
+                    - POST
+                    conditions:
+                      department: HR
+                    is_active: true
+                    created_at: '2025-09-08T10:00:00Z'
+                    updated_at: '2025-09-08T10:00:00Z'
+                  summary: Délégation créée avec succès
+                  description: Réponse après création de la délégation
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Données invalides
+                content:
+                  application/json:
+                    example:
+                      delegatee:
+                      - Utilisateur invalide.
+                      permission:
+                      - Permission invalide.
+                      end_date:
+                      - La date de fin doit être postérieure à la date de début.
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                description: Pas le droit de déléguer cette permission
+                content:
+                  application/json:
+                    example:
+                      error: Vous n'avez pas le droit de déléguer cette permission.
+          description: ''
+  /api/permissions/permission-managers/:
+    get:
+      operationId: permissions_permission_managers_retrieve
+      description: Liste tous les gestionnaires de permissions
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-managers/{id}/:
+    get:
+      operationId: permissions_permission_managers_retrieve_2
+      description: Détails d'un gestionnaire de permissions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-managers/{id}/delete/:
+    delete:
+      operationId: permissions_permission_managers_delete_destroy
+      description: Supprime un gestionnaire de permissions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/permissions/permission-managers/{id}/update/:
+    put:
+      operationId: permissions_permission_managers_update_update
+      description: Met à jour un gestionnaire de permissions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: permissions_permission_managers_update_partial_update
+      description: Met à jour un gestionnaire de permissions
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-managers/create/:
+    post:
+      operationId: permissions_permission_managers_create_create
+      description: Crée un nouveau gestionnaire de permissions
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permission-managers/stats/:
+    get:
+      operationId: permissions_permission_managers_stats_retrieve
+      description: Statistiques des gestionnaires de permissions
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permissions/:
+    get:
+      operationId: list_permissions
+      description: "\n    Récupère la liste paginée des permissions avec filtrage\
+        \ et recherche.\n    \n    **Filtres disponibles :**\n    - `app_label` :\
+        \ Filtrer par application\n    - `model` : Filtrer par modèle\n    - `action`\
+        \ : Filtrer par action (view, add, change, delete)\n    - `is_custom` : Filtrer\
+        \ par type (true/false)\n    - `is_active` : Filtrer par statut (true/false)\n\
+        \    - `search` : Recherche textuelle dans le nom et la description\n    \n\
+        \    **Tri :**\n    - `ordering` : Tri par champ (ex: `app_label,model,action`)\n\
+        \    "
+      summary: Lister les permissions
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+        description: Filtrer par action
+        examples:
+          ViewAction:
+            value: view
+            summary: View action
+          ChangeAction:
+            value: change
+            summary: Change action
+      - in: query
+        name: app_label
+        schema:
+          type: string
+        description: Filtrer par application
+        examples:
+          UsersApp:
+            value: users
+            summary: Users app
+          PermissionsApp:
+            value: permissions
+            summary: Permissions app
+      - in: query
+        name: is_custom
+        schema:
+          type: boolean
+        description: Filtrer par type de permission
+        examples:
+          CustomPermissions:
+            value: true
+            summary: Custom permissions
+          SystemPermissions:
+            value: false
+            summary: System permissions
+      - in: query
+        name: model
+        schema:
+          type: string
+        description: Filtrer par modèle
+        examples:
+          UserModel:
+            value: user
+            summary: User model
+          PermissionModel:
+            value: permission
+            summary: Permission model
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        description: Tri des résultats
+        examples:
+          SortByApp:
+            value: app_label
+            summary: Sort by app
+          SortByModel:
+            value: model
+            summary: Sort by model
+          SortByAction:
+            value: action
+            summary: Sort by action
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Recherche textuelle
+        examples:
+          SearchUser:
+            value: user
+            summary: Search user
+          SearchSalary:
+            value: salary
+            summary: Search salary
+      tags:
+      - Permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Liste des permissions récupérée avec succès
+              examples:
+                ListeDesPermissions:
+                  value:
+                    results:
+                    - id: 1
+                      name: Can view user profile
+                      codename: users.userprofile.view
+                      description: Permission to view user profiles
+                      app_label: users
+                      model: userprofile
+                      action: view
+                      field_name: null
+                      min_value: null
+                      max_value: null
+                      conditions: null
+                      is_custom: false
+                      is_custom_display: Système
+                      is_active: true
+                      created_by: 1
+                      created_by_username: admin@example.com
+                      created_at: '2025-09-08T10:00:00Z'
+                      updated_at: '2025-09-08T10:00:00Z'
+                    count: 25
+                    page: 1
+                    page_size: 20
+                    total_pages: 2
+                  summary: Permissions avec pagination
+                  description: Réponse avec liste paginée des permissions
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Authentification requise
+                content:
+                  application/json:
+                    example:
+                      detail: Authentication credentials were not provided.
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                description: Permissions insuffisantes
+                content:
+                  application/json:
+                    example:
+                      detail: You do not have permission to perform this action.
+          description: ''
+  /api/permissions/permissions/{id}/:
+    get:
+      operationId: permissions_permissions_retrieve
+      description: Détails d'une permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permissions/{id}/delete/:
+    delete:
+      operationId: permissions_permissions_delete_destroy
+      description: Supprime une permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/permissions/permissions/{id}/update/:
+    put:
+      operationId: permissions_permissions_update_update
+      description: Met à jour une permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: permissions_permissions_update_partial_update
+      description: Met à jour une permission
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/permissions/create/:
+    post:
+      operationId: create_permission
+      description: "\n    Crée une nouvelle permission personnalisée avec contraintes\
+        \ granulaires.\n    \n    **Types de permissions :**\n    - **Permission simple**\
+        \ : Accès basique (view, add, change, delete)\n    - **Permission de champ**\
+        \ : Accès à un champ spécifique\n    - **Permission avec contraintes** : Accès\
+        \ avec limites de valeur\n    - **Permission conditionnelle** : Accès basé\
+        \ sur des conditions\n    \n    **Exemples d'utilisation :**\n    - Permission\
+        \ pour modifier le salaire avec limite max\n    - Permission pour voir les\
+        \ données sensibles selon le département\n    - Permission pour supprimer\
+        \ uniquement ses propres données\n    "
+      summary: Créer une permission
+      tags:
+      - Permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: Permission créée avec succès
+              examples:
+                PermissionCréée:
+                  value:
+                    id: 1
+                    name: Can modify user salary
+                    codename: users.userprofile.change_salary
+                    description: Permission to modify user salary field
+                    app_label: users
+                    model: userprofile
+                    action: change
+                    field_name: salary
+                    min_value: 0
+                    max_value: 100000
+                    conditions:
+                      department: HR
+                    is_custom: true
+                    is_custom_display: Personnalisée
+                    is_active: true
+                    created_by: 1
+                    created_by_username: admin@example.com
+                    created_at: '2025-09-08T10:00:00Z'
+                    updated_at: '2025-09-08T10:00:00Z'
+                  summary: Permission créée avec succès
+                  description: Réponse après création réussie
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Données invalides
+                content:
+                  application/json:
+                    example:
+                      codename:
+                      - Une permission avec ce code existe déjà.
+                      name:
+                      - Ce champ est requis.
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Authentification requise
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                description: Permissions insuffisantes pour créer des permissions
+          description: ''
+  /api/permissions/permissions/stats/:
+    get:
+      operationId: permission_stats
+      description: "\n    Récupère les statistiques détaillées du système de permissions.\n\
+        \    \n    **Métriques incluses :**\n    - Nombre total de permissions\n \
+        \   - Répartition par type (système/personnalisé)\n    - Répartition par application\n\
+        \    - Répartition par action\n    - Permissions les plus utilisées\n    -\
+        \ Évolution dans le temps\n    "
+      summary: Statistiques des permissions
+      tags:
+      - Permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: Statistiques récupérées avec succès
+              examples:
+                StatistiquesComplètes:
+                  value:
+                    total_permissions: 25
+                    custom_permissions: 5
+                    system_permissions: 20
+                    active_permissions: 23
+                    inactive_permissions: 2
+                    permissions_by_app:
+                      users: 10
+                      permissions: 8
+                      notifications: 4
+                      security: 3
+                    permissions_by_action:
+                      view: 8
+                      add: 6
+                      change: 7
+                      delete: 4
+                    permissions_by_type:
+                      field_permissions: 3
+                      conditional_permissions: 2
+                      value_constrained_permissions: 4
+                      simple_permissions: 16
+                    most_used_permissions:
+                    - id: 1
+                      name: Can view user profile
+                      codename: users.userprofile.view
+                      usage_count: 150
+                    - id: 2
+                      name: Can modify user profile
+                      codename: users.userprofile.change
+                      usage_count: 89
+                    recent_activity:
+                      permissions_created_last_week: 2
+                      permissions_modified_last_week: 5
+                      active_delegations: 3
+                  summary: Métriques du système
+                  description: Statistiques détaillées des permissions
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Authentification requise
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                description: Permissions insuffisantes pour voir les statistiques
+          description: ''
+  /api/permissions/role-delegations/:
+    get:
+      operationId: permissions_role_delegations_retrieve
+      description: Liste toutes les délégations de rôles
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/role-delegations/{id}/:
+    get:
+      operationId: permissions_role_delegations_retrieve_2
+      description: Détails d'une délégation de rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/role-delegations/{id}/revoke/:
+    post:
+      operationId: permissions_role_delegations_revoke_create
+      description: Révoque une délégation de rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/role-delegations/create/:
+    post:
+      operationId: permissions_role_delegations_create_create
+      description: Crée une nouvelle délégation de rôle
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/:
+    get:
+      operationId: permissions_roles_retrieve
+      description: Liste tous les rôles
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/{id}/:
+    get:
+      operationId: permissions_roles_retrieve_2
+      description: Détails d'un rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/{id}/delete/:
+    delete:
+      operationId: permissions_roles_delete_destroy
+      description: Supprime un rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/permissions/roles/{id}/update/:
+    put:
+      operationId: permissions_roles_update_update
+      description: Met à jour un rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: permissions_roles_update_partial_update
+      description: Met à jour un rôle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/{role_pk}/permissions/:
+    get:
+      operationId: permissions_roles_permissions_retrieve
+      description: Liste les permissions d'un rôle
+      parameters:
+      - in: path
+        name: role_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/{role_pk}/permissions/{permission_pk}/:
+    get:
+      operationId: permissions_roles_permissions_retrieve_2
+      description: Détails d'une permission de rôle
+      parameters:
+      - in: path
+        name: permission_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: role_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/roles/create/:
+    post:
+      operationId: create_role
+      description: "\n    Crée un nouveau rôle avec des permissions assignées.\n \
+        \   \n    **Types de rôles :**\n    - **Rôle système** : Rôles prédéfinis\
+        \ (Admin, User, etc.)\n    - **Rôle personnalisé** : Rôles créés par les administrateurs\n\
+        \    \n    **Assignation de permissions :**\n    - Utilisez `permission_ids`\
+        \ pour assigner des permissions existantes\n    - Les permissions sont vérifiées\
+        \ avant assignation\n    "
+      summary: Créer un rôle
+      tags:
+      - Permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                description: Rôle créé avec succès
+              examples:
+                RôleCréé:
+                  value:
+                    id: 1
+                    name: HR Manager
+                    description: Human Resources Manager role
+                    permissions:
+                    - id: 1
+                      name: Can view user profile
+                      codename: users.userprofile.view
+                    - id: 2
+                      name: Can modify user salary
+                      codename: users.userprofile.change_salary
+                    is_system: false
+                    is_active: true
+                    created_by: 1
+                    created_by_username: admin@example.com
+                    created_at: '2025-09-08T10:00:00Z'
+                    updated_at: '2025-09-08T10:00:00Z'
+                  summary: Rôle créé avec succès
+                  description: Réponse après création du rôle
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Données invalides
+                content:
+                  application/json:
+                    example:
+                      name:
+                      - Un rôle avec ce nom existe déjà.
+                      permission_ids:
+                      - Permission ID 999 n'existe pas.
+          description: ''
+  /api/permissions/roles/stats/:
+    get:
+      operationId: permissions_roles_stats_retrieve
+      description: Statistiques des rôles
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/user-roles/:
+    get:
+      operationId: permissions_user_roles_retrieve
+      description: Liste tous les rôles utilisateur
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/user-roles/{id}/:
+    get:
+      operationId: permissions_user_roles_retrieve_2
+      description: Détails d'un rôle utilisateur
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/user-roles/{id}/delete/:
+    delete:
+      operationId: permissions_user_roles_delete_destroy
+      description: Supprime un rôle utilisateur
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/permissions/user-roles/{id}/update/:
+    put:
+      operationId: permissions_user_roles_update_update
+      description: Met à jour un rôle utilisateur
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: permissions_user_roles_update_partial_update
+      description: Met à jour un rôle utilisateur
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/user-roles/create/:
+    post:
+      operationId: permissions_user_roles_create_create
+      description: Crée un nouveau rôle utilisateur
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/permissions/user-roles/stats/:
+    get:
+      operationId: permissions_user_roles_stats_retrieve
+      description: Statistiques des rôles utilisateur
+      tags:
+      - permissions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/:
+    get:
+      operationId: users_retrieve
+      description: |-
+        Liste les utilisateurs avec pagination
+
+        GET /api/users/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/block/:
+    post:
+      operationId: users_block_create
+      description: |-
+        Bloque un utilisateur
+
+        POST /api/users/{user_id}/block/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/follow/:
+    post:
+      operationId: users_follow_create
+      description: |-
+        Suit un utilisateur
+
+        POST /api/users/{user_id}/follow/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/followers/:
+    get:
+      operationId: users_followers_retrieve_2
+      description: |-
+        Récupère la liste des abonnés d'un utilisateur
+
+        GET /api/users/followers/
+        GET /api/users/{user_id}/followers/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/following/:
+    get:
+      operationId: users_following_retrieve_2
+      description: |-
+        Récupère la liste des utilisateurs suivis
+
+        GET /api/users/following/
+        GET /api/users/{user_id}/following/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/stats/:
+    get:
+      operationId: users_stats_retrieve_2
+      description: |-
+        Récupère les statistiques d'un utilisateur
+
+        GET /api/users/stats/
+        GET /api/users/{user_id}/stats/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/{user_id}/unblock/:
+    delete:
+      operationId: users_unblock_destroy
+      description: |-
+        Débloque un utilisateur
+
+        DELETE /api/users/{user_id}/block/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/{user_id}/unfollow/:
+    delete:
+      operationId: users_unfollow_destroy
+      description: |-
+        Arrête de suivre un utilisateur
+
+        DELETE /api/users/{user_id}/follow/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/activity/:
+    get:
+      operationId: users_activity_retrieve
+      description: |-
+        Récupère l'historique des activités d'un utilisateur
+
+        GET /api/users/activity/
+        GET /api/users/activity/{user_id}/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/activity/{user_id}/:
+    get:
+      operationId: users_activity_retrieve_2
+      description: |-
+        Récupère l'historique des activités d'un utilisateur
+
+        GET /api/users/activity/
+        GET /api/users/activity/{user_id}/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/blocked/:
+    get:
+      operationId: users_blocked_retrieve
+      description: |-
+        Récupère la liste des utilisateurs bloqués
+
+        GET /api/users/blocked/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/followers/:
+    get:
+      operationId: users_followers_retrieve
+      description: |-
+        Récupère la liste des abonnés d'un utilisateur
+
+        GET /api/users/followers/
+        GET /api/users/{user_id}/followers/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/following/:
+    get:
+      operationId: users_following_retrieve
+      description: |-
+        Récupère la liste des utilisateurs suivis
+
+        GET /api/users/following/
+        GET /api/users/{user_id}/following/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/preferences/:
+    get:
+      operationId: users_preferences_retrieve
+      description: |-
+        Gère les préférences de l'utilisateur connecté
+
+        GET /api/users/preferences/
+        PUT/PATCH /api/users/preferences/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: users_preferences_update
+      description: |-
+        Gère les préférences de l'utilisateur connecté
+
+        GET /api/users/preferences/
+        PUT/PATCH /api/users/preferences/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: users_preferences_partial_update
+      description: |-
+        Gère les préférences de l'utilisateur connecté
+
+        GET /api/users/preferences/
+        PUT/PATCH /api/users/preferences/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/:
+    get:
+      operationId: users_profile_retrieve
+      description: |-
+        Récupère le profil d'un utilisateur
+
+        GET /api/users/profile/
+        GET /api/users/profile/{user_id}/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/{user_id}/:
+    get:
+      operationId: users_profile_retrieve_2
+      description: |-
+        Récupère le profil d'un utilisateur
+
+        GET /api/users/profile/
+        GET /api/users/profile/{user_id}/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/{user_id}/stats/:
+    get:
+      operationId: users_profile_stats_retrieve_2
+      description: |-
+        Récupère les statistiques d'un profil utilisateur
+
+        GET /api/users/profile/stats/
+        GET /api/users/profile/stats/{user_id}/
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/create/:
+    post:
+      operationId: users_profile_create_create
+      description: |-
+        Crée un profil utilisateur (pour les nouveaux utilisateurs)
+
+        POST /api/users/profile/create/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/delete/:
+    delete:
+      operationId: users_profile_delete_destroy
+      description: |-
+        Supprime le profil de l'utilisateur connecté
+
+        DELETE /api/users/profile/delete/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/profile/stats/:
+    get:
+      operationId: users_profile_stats_retrieve
+      description: |-
+        Récupère les statistiques d'un profil utilisateur
+
+        GET /api/users/profile/stats/
+        GET /api/users/profile/stats/{user_id}/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/update/:
+    put:
+      operationId: users_profile_update_update
+      description: |-
+        Met à jour le profil de l'utilisateur connecté
+
+        PUT/PATCH /api/users/profile/update/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: users_profile_update_partial_update
+      description: |-
+        Met à jour le profil de l'utilisateur connecté
+
+        PUT/PATCH /api/users/profile/update/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/search/:
+    post:
+      operationId: users_search_create
+      description: |-
+        Recherche avancée d'utilisateurs
+
+        POST /api/users/search/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/stats/:
+    get:
+      operationId: users_stats_retrieve
+      description: |-
+        Récupère les statistiques d'un utilisateur
+
+        GET /api/users/stats/
+        GET /api/users/{user_id}/stats/
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+servers:
+- url: http://localhost:8000
+  description: Serveur de développement
+- url: https://api.example.com
+  description: Serveur de production
+tags:
+- name: Authentication
+  description: Authentification et 2FA
+- name: Users
+  description: Gestion des utilisateurs et profils
+- name: Notifications
+  description: Système de notifications
+- name: Security
+  description: Sécurité et monitoring
+- name: Permissions
+  description: Système de permissions avancé

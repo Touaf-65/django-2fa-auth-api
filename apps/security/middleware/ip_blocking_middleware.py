@@ -83,3 +83,4 @@ class IPBlockingMiddleware(MiddlewareMixin):
                 logger.warning(f"IP {ip_address} bloquée automatiquement: {block_conditions['reason']}")
         
         return response
+

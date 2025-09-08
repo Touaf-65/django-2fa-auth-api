@@ -20,6 +20,7 @@ from .permission_helpers import (
     get_permission_codename,
     create_permission_from_string,
     get_model_permissions,
+    get_permission_statistics,
 )
 
 __all__ = [
@@ -37,4 +38,5 @@ __all__ = [
     'get_permission_codename',
     'create_permission_from_string',
     'get_model_permissions',
+    'get_permission_statistics',
 ]

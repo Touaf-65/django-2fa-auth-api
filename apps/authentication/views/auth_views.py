@@ -11,10 +11,15 @@ from rest_framework_simplejwt.views import TokenRefreshView as DRFTokenRefreshVi
 from django.contrib.auth import login, logout
 from django.utils import timezone
 
+from core.schemas.authentication_schemas import (
+    register_schema, login_schema, refresh_token_schema
+)
+
 from ..models import User, UserSession
 from ..serializers import UserSerializer, UserRegistrationSerializer, UserLoginSerializer
 
 
+@register_schema
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def user_registration(request):
@@ -50,6 +55,7 @@ def user_registration(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@login_schema
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def user_login(request):
@@ -144,6 +150,7 @@ def user_logout(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+@refresh_token_schema
 class TokenRefreshView(DRFTokenRefreshView):
     """
     Rafraîchissement des tokens JWT

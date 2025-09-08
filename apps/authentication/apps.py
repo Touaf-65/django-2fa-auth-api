@@ -14,3 +14,4 @@ class AuthenticationConfig(AppConfig):
         """Code exécuté au démarrage de l'application"""
         # Import des signaux si nécessaire
         pass
+

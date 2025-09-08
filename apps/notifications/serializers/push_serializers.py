@@ -302,3 +302,4 @@ class PushTokenCreateSerializer(serializers.Serializer):
         if value not in valid_types:
             raise serializers.ValidationError(f"Type de device invalide. Types valides: {', '.join(valid_types)}")
         return value
+

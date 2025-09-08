@@ -352,3 +352,4 @@ class UserProfileSummarySerializer(serializers.ModelSerializer):
         """Retourne le nombre d'utilisateurs suivis"""
         from ..models import UserFollow
         return UserFollow.get_following_count(obj.user)
+

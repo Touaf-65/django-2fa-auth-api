@@ -156,3 +156,4 @@ class TwoFactorAuth(models.Model):
         two_factor_auth.generate_backup_codes()
         two_factor_auth.save()
         return two_factor_auth
+

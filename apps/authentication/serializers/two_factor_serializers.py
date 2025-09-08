@@ -94,3 +94,4 @@ class TwoFactorDisableSerializer(serializers.Serializer):
         if not user.check_password(value):
             raise serializers.ValidationError("Mot de passe incorrect.")
         return value
+

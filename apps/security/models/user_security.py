@@ -319,3 +319,4 @@ class UserSecurity(models.Model):
             }
         )
         return profile
+

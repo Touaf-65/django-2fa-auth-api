@@ -88,3 +88,4 @@ urlpatterns = [
     path('push/tokens/<int:token_id>/delete/', push_token_delete, name='push_token_delete'),
     path('push/<int:push_id>/', push_notification_detail, name='push_notification_detail'),
 ]
+

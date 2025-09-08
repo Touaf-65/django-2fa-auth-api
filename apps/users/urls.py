@@ -64,3 +64,4 @@ urlpatterns = [
     path('<int:user_id>/unblock/', user_unblock, name='user_unblock'),
     path('blocked/', user_blocked, name='user_blocked'),
 ]
+

@@ -323,3 +323,4 @@ class UserStatsSerializer(serializers.Serializer):
             data['account_age_days'] = 0
         
         return data
+

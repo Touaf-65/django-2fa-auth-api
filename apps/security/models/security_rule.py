@@ -205,3 +205,4 @@ class SecurityRule(models.Model):
                 })
         
         return triggered_rules
+

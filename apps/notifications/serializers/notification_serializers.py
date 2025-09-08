@@ -231,3 +231,4 @@ class NotificationStatsSerializer(serializers.Serializer):
             data['success_rate'] = 0.0
         
         return data
+

@@ -191,3 +191,4 @@ class RolePermission(models.Model):
     def __str__(self):
         status = "Accordé" if self.granted else "Refusé"
         return f"{self.role.name} - {self.permission.name} ({status})"
+

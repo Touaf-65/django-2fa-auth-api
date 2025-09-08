@@ -288,3 +288,4 @@ def push_stats(request):
         stats['success_rate'] = 0.0
     
     return Response(stats, status=status.HTTP_200_OK)
+

@@ -153,3 +153,4 @@ class LoginAttempt(models.Model):
             city=city or '',
             failure_reason=failure_reason or ''
         )
+

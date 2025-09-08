@@ -274,3 +274,4 @@ def user_profile_stats(request, user_id=None):
         stats['account_age_days'] = 0
     
     return Response(stats, status=status.HTTP_200_OK)
+
