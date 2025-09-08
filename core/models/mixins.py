@@ -290,3 +290,5 @@ class VersionMixin(models.Model):
             self.version_notes = notes
         self.save()
 
+
+

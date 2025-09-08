@@ -50,3 +50,5 @@ def invalidate_usage_cache(sender, instance, **kwargs):
         # les caches correspondant au pattern
         pass
 
+
+

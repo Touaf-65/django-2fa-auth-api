@@ -283,3 +283,5 @@ class AlertNotificationListView(generics.ListAPIView):
             queryset = queryset.filter(alert_id=alert_id)
         
         return queryset.order_by('-created_at')
+
+

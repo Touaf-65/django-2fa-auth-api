@@ -28,3 +28,5 @@ class AdminLogListSerializer(serializers.ModelSerializer):
             'admin_user_email', 'message', 'created_at'
         ]
 
+
+

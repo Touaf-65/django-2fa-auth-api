@@ -180,3 +180,5 @@ class UserRoleStatsSerializer(serializers.Serializer):
     assignments_by_role = serializers.DictField()
     users_with_roles = serializers.IntegerField()
 
+
+

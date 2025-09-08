@@ -40,3 +40,5 @@ INFO_MESSAGES = {
     '2FA_DISABLED': 'Authentification à deux facteurs désactivée',
 }
 
+
+

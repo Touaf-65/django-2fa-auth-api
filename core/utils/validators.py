@@ -453,3 +453,5 @@ def validate_username(value: str) -> None:
     if '..' in value:
         raise ValidationError(_('Le nom d\'utilisateur ne peut pas contenir deux points consécutifs.'))
 
+
+

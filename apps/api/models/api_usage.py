@@ -83,3 +83,5 @@ class APIUsage(TimestampedModel):
         """Vérifie si la requête a été limitée par le taux"""
         return self.status == 'rate_limited'
 
+
+

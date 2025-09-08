@@ -79,3 +79,5 @@ urlpatterns = [
     path('permission-managers/stats/', views.permission_manager_stats, name='permission_manager_stats'),
 ]
 
+
+

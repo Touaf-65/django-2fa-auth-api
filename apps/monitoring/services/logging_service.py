@@ -53,6 +53,9 @@ class LoggingService:
         response_time = kwargs.get('response_time')
         status_code = kwargs.get('status_code')
         
+        # Nettoyer les métadonnées pour la sérialisation JSON
+        clean_metadata = self._clean_metadata(metadata)
+        
         # Création de l'entrée de log
         log_entry = LogEntry.objects.create(
             level=level,
@@ -63,7 +66,7 @@ class LoggingService:
             request_id=request_id,
             ip_address=metadata.get('ip_address'),
             user_agent=metadata.get('user_agent', ''),
-            metadata=metadata,
+            metadata=clean_metadata,
             tags=tags,
             app_name=app_name,
             module_name=module_name,
@@ -287,8 +290,35 @@ class StructuredLogger:
         
         return self.error(message, **kwargs)
     
+    def _clean_metadata(self, metadata):
+        """Nettoie les métadonnées pour la sérialisation JSON"""
+        if not isinstance(metadata, dict):
+            return {}
+        
+        clean_metadata = {}
+        for key, value in metadata.items():
+            # Convertir les clés en string
+            clean_key = str(key)
+            
+            # Nettoyer les valeurs
+            if value is None:
+                clean_metadata[clean_key] = None
+            elif isinstance(value, (str, int, float, bool)):
+                clean_metadata[clean_key] = value
+            elif isinstance(value, (list, tuple)):
+                clean_metadata[clean_key] = [
+                    str(item) if not isinstance(item, (str, int, float, bool, type(None))) 
+                    else item for item in value
+                ]
+            elif isinstance(value, dict):
+                clean_metadata[clean_key] = self._clean_metadata(value)
+            else:
+                # Convertir les autres types en string
+                clean_metadata[clean_key] = str(value)
+        
+        return clean_metadata
+    
     def _format_traceback(self, traceback):
         """Formate la traceback"""
         import traceback
         return ''.join(traceback.format_tb(traceback))
-

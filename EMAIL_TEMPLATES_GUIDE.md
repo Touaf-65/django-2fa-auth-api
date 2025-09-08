@@ -213,3 +213,5 @@ Chaque email est enregistré dans la table `notifications_notification` :
 
 **🎉 Vos templates d'email sont maintenant prêts à être utilisés en production !**
 
+
+

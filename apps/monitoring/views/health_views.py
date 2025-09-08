@@ -235,3 +235,5 @@ def health_check_latest_result_view(request, health_check_id):
     
     serializer = HealthCheckResultSerializer(latest_result)
     return Response(serializer.data)
+
+

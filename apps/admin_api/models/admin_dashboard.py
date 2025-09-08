@@ -22,3 +22,5 @@ class AdminDashboard(TimestampedModel):
     def __str__(self):
         return self.name
 
+
+

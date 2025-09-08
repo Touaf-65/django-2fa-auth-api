@@ -271,3 +271,5 @@ def email_template_delete(request, template_id):
         'message': 'Template d\'email supprimé avec succès.'
     }, status=status.HTTP_200_OK)
 
+
+

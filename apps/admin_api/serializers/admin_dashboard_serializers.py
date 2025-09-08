@@ -21,3 +21,5 @@ class AdminDashboardListSerializer(serializers.ModelSerializer):
         model = AdminDashboard
         fields = ['id', 'name', 'description', 'is_default', 'is_active', 'created_at']
 
+
+

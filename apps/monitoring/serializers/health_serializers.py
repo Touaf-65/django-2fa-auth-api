@@ -218,3 +218,5 @@ class HealthCheckRunAllSerializer(serializers.Serializer):
     def validate_force_run(self, value):
         """Valide le paramètre force_run"""
         return value
+
+

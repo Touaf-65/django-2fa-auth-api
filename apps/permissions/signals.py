@@ -15,3 +15,5 @@ def create_permission_manager_profile(sender, instance, created, **kwargs):
     if created:
         PermissionManager.get_or_create_for_user(instance)
 
+
+

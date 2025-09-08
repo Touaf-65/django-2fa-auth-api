@@ -225,3 +225,5 @@ class PermissionManagerStatsSerializer(serializers.Serializer):
     managers_with_role_management = serializers.IntegerField()
     managers_with_group_management = serializers.IntegerField()
 
+
+

@@ -65,3 +65,5 @@ def admin_dashboard_stats(request):
         }
     })
 
+
+

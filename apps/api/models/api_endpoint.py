@@ -75,3 +75,5 @@ class APIEndpoint(TimestampedModel):
         """Vérifie si l'endpoint est déprécié"""
         return self.status == 'deprecated'
 
+
+

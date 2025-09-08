@@ -77,3 +77,5 @@ def handle_successful_login_attempt(sender, instance, created, **kwargs):
                 instance.user_agent
             )
 
+
+

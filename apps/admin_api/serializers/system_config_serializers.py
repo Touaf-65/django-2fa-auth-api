@@ -38,3 +38,5 @@ class SystemConfigUpdateSerializer(serializers.ModelSerializer):
         fields = ['value', 'description', 'is_public', 'is_encrypted']
         read_only_fields = ['key', 'category']
 
+
+

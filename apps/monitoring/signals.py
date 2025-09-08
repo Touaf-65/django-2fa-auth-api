@@ -109,3 +109,5 @@ def system_health_updated(sender, instance, created, **kwargs):
                     'issues': instance.issues,
                 }
             )
+
+

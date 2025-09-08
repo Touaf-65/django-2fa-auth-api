@@ -23,3 +23,5 @@ class SystemConfig(TimestampedModel):
     def __str__(self):
         return f"{self.category}.{self.key}"
 
+
+

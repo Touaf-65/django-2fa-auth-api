@@ -279,3 +279,5 @@ class ErrorEndpointsSerializer(serializers.Serializer):
     )
     period_hours = serializers.IntegerField()
     limit = serializers.IntegerField()
+
+

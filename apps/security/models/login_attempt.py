@@ -154,3 +154,5 @@ class LoginAttempt(models.Model):
             failure_reason=failure_reason or ''
         )
 
+
+

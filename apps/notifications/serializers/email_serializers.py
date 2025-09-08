@@ -219,3 +219,5 @@ class EmailBulkSendSerializer(serializers.Serializer):
             raise serializers.ValidationError("Le contenu doit contenir au moins 10 caractères.")
         return value.strip()
 
+
+

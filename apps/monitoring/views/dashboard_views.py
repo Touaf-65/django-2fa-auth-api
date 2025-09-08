@@ -294,3 +294,5 @@ def widget_data_view(request, widget_id):
             {'error': 'Widget not found'},
             status=status.HTTP_404_NOT_FOUND
         )
+
+

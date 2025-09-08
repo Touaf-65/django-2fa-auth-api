@@ -134,3 +134,5 @@ urlpatterns = [
     path('widgets/<int:pk>/', DashboardWidgetRetrieveUpdateView.as_view(), name='widget-retrieve-update'),
     path('widgets/<int:widget_id>/data/', widget_data_view, name='widget-data'),
 ]
+
+

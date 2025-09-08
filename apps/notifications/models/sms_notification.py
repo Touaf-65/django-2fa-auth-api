@@ -98,3 +98,5 @@ class SMSNotification(models.Model):
             'twilio_error_code', 'twilio_error_message', 'updated_at'
         ])
 
+
+

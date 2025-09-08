@@ -134,3 +134,5 @@ class MetricValue(TimestampedModel):
         """Définit une valeur de label"""
         self.labels[key] = value
 
+
+

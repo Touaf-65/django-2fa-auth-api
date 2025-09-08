@@ -195,3 +195,5 @@ class MetricsSummarySerializer(serializers.Serializer):
     recent_values = serializers.ListField(
         child=serializers.DictField()
     )
+
+

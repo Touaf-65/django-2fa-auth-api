@@ -287,3 +287,5 @@ class AlertManager:
             'acknowledged_alerts': len([a for a in self.alerts if a.is_acknowledged]),
         }
 
+
+

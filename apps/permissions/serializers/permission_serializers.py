@@ -171,3 +171,5 @@ class PermissionStatsSerializer(serializers.Serializer):
     permissions_by_app = serializers.DictField()
     permissions_by_action = serializers.DictField()
 
+
+

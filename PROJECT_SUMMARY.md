@@ -271,3 +271,5 @@ python test_final.py
 
 **L'API peut maintenant être utilisée comme base pour des applications nécessitant une authentification sécurisée avec 2FA.**
 
+
+

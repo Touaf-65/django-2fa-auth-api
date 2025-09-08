@@ -144,3 +144,5 @@ echo "   2. Scanner le QR code généré lors de la configuration 2FA"
 echo "   3. Utiliser le code TOTP généré pour vérifier l'activation"
 echo "   4. Tester la connexion avec 2FA activé"
 
+
+

@@ -140,3 +140,5 @@ class LogStatisticsSerializer(serializers.Serializer):
     logs_by_hour = serializers.ListField(
         child=serializers.DictField()
     )
+
+

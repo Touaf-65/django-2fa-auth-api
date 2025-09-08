@@ -173,3 +173,5 @@ class DashboardWidget(TimestampedModel):
         self.position = new_position
         self.save()
 
+
+

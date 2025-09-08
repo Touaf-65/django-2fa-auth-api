@@ -399,3 +399,5 @@ def user_stats(request, user_id=None):
     serializer = UserStatsSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+

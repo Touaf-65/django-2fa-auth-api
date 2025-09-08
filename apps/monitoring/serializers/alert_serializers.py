@@ -198,3 +198,5 @@ class AlertTrendsSerializer(serializers.Serializer):
         child=serializers.DictField()
     )
     period = serializers.DictField()
+
+

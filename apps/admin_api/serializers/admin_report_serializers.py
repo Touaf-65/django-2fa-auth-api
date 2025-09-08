@@ -43,3 +43,5 @@ class AdminReportCreateSerializer(serializers.ModelSerializer):
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
+
+

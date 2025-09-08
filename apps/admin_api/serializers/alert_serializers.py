@@ -112,3 +112,5 @@ class AlertNotificationListSerializer(serializers.ModelSerializer):
             'subject', 'sent_at', 'delivered_at', 'retry_count', 'created_at'
         ]
 
+
+

@@ -28,6 +28,7 @@ class LogEntry(TimestampedModel):
         ('system', 'System'),
         ('database', 'Database'),
         ('external', 'External Service'),
+        ('monitoring', 'Monitoring'),
     ]
     
     level = models.CharField(max_length=10, choices=LEVEL_CHOICES, db_index=True)

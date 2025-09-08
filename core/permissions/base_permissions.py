@@ -211,3 +211,5 @@ class IsOwnerOrAdminOrStaffOrSuperuser(BasePermission):
         # Propriétaires ont tous les droits
         return obj.created_by == request.user
 
+
+

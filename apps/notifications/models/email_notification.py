@@ -250,3 +250,5 @@ class EmailNotification(models.Model):
             'attachments': self.attachments
         }
 
+
+

@@ -234,3 +234,5 @@ class SecurityEvent(models.Model):
         self.add_action('escalated', 'Événement escaladé pour investigation')
         self.save(update_fields=['status', 'updated_at'])
 
+
+

@@ -35,3 +35,5 @@ class AdminLog(TimestampedModel):
     def __str__(self):
         return f"{self.level.upper()} - {self.action} - {self.admin_user.email}"
 
+
+

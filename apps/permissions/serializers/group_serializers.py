@@ -266,3 +266,5 @@ class GroupStatsSerializer(serializers.Serializer):
     groups_with_roles = serializers.IntegerField()
     total_memberships = serializers.IntegerField()
 
+
+

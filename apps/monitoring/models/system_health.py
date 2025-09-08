@@ -216,3 +216,5 @@ class HealthCheckResult(TimestampedModel):
         """Vérifie si la vérification a un avertissement"""
         return self.status == 'warn'
 
+
+

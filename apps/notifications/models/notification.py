@@ -355,3 +355,5 @@ class NotificationLog(models.Model):
             details=details or {}
         )
 
+
+

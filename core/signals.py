@@ -44,3 +44,5 @@ def user_pre_delete(sender, instance, **kwargs):
     """Signal pre-delete pour les utilisateurs"""
     logger.info(f"Suppression de l'utilisateur: {instance.email}")
 
+
+

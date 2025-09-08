@@ -521,3 +521,5 @@ class CustomPermissionsTest(TestCase):
         request.user = self.superuser
         self.assertTrue(permission.has_permission(request, None))
 
+
+

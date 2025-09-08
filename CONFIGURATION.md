@@ -164,3 +164,5 @@ Si vous rencontrez des problèmes :
 
 **🎉 Une fois configuré, votre API Django 2FA Auth sera prête à envoyer des emails et SMS réels !**
 
+
+

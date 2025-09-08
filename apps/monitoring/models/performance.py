@@ -150,3 +150,5 @@ class PerformanceReport(TimestampedModel):
         self.summary = self.generate_summary()
         self.save()
 
+
+

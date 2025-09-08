@@ -202,3 +202,5 @@ def use_delegation(permission_codename=None, role_name=None):
         return view_func
     return decorator
 
+
+

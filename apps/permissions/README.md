@@ -930,3 +930,5 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 **🛡️ Système de Permissions Avancé - Développé avec ❤️ pour Django**
 
+
+

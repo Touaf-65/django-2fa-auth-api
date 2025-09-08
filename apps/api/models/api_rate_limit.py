@@ -114,3 +114,5 @@ class APIRateLimitUsage(TimestampedModel):
         """Vérifie si la limite est dépassée"""
         return self.requests_count > self.rate_limit.requests_per_minute
 
+
+

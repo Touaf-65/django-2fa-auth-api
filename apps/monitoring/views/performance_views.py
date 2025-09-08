@@ -330,3 +330,5 @@ def performance_statistics_view(request):
     summary = performance_service.get_performance_summary(hours=hours)
     
     return Response(summary)
+
+

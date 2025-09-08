@@ -45,3 +45,5 @@ class SystemConfigDestroyAPIView(generics.DestroyAPIView):
     queryset = SystemConfig.objects.all()
     permission_classes = [IsStaffOrReadOnly]
 
+
+

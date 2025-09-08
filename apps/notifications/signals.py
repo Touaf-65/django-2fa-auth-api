@@ -32,3 +32,5 @@ def log_notification_deletion(sender, instance, **kwargs):
     # Note: Cette fonctionnalité peut être étendue selon les besoins
     pass
 
+
+

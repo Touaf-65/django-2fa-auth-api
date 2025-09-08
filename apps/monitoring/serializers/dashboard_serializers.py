@@ -227,3 +227,5 @@ class DashboardStatisticsSerializer(serializers.Serializer):
     widgets_by_type = serializers.ListField(
         child=serializers.DictField()
     )
+
+

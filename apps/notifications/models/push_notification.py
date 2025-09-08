@@ -193,3 +193,5 @@ class PushNotification(models.Model):
         self.fcm_status = status
         self.save(update_fields=['fcm_message_id', 'fcm_status', 'updated_at'])
 
+
+

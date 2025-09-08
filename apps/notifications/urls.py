@@ -89,3 +89,5 @@ urlpatterns = [
     path('push/<int:push_id>/', push_notification_detail, name='push_notification_detail'),
 ]
 
+
+

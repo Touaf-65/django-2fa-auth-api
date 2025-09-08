@@ -274,3 +274,5 @@ class AdminAction(TimestampedModel):
         """Récupère les actions en cours"""
         return cls.objects.filter(status='in_progress')
 
+
+

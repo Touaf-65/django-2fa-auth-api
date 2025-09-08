@@ -18,3 +18,5 @@ class CoreConfig(AppConfig):
         except ImportError:
             pass
 
+
+

@@ -53,3 +53,5 @@ class ConfigurationError(CoreException):
     """Exception pour les erreurs de configuration"""
     pass
 
+
+

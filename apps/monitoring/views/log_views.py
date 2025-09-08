@@ -211,3 +211,5 @@ def log_create_view(request):
     
     serializer = LogEntrySerializer(log_entry)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+

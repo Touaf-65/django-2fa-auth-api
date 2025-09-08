@@ -140,3 +140,5 @@ class APISystemStatus(TimestampedModel):
             return 0
         return (self.failed_requests / self.total_requests) * 100
 
+
+

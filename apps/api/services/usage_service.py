@@ -324,3 +324,5 @@ class UsageService:
         # Par exemple, en utilisant des patterns de clés
         pass
 
+
+

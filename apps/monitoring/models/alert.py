@@ -226,3 +226,5 @@ class AlertNotification(TimestampedModel):
         self.error_message = error_message
         self.save()
 
+
+

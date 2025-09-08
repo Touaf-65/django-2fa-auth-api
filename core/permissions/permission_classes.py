@@ -292,3 +292,5 @@ class IntegrationPermission(permissions.BasePermission):
             request.user.has_perm('core.manage_integrations')
         )
 
+
+

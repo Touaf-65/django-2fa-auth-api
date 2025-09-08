@@ -206,3 +206,5 @@ class AlertNotification(TimestampedModel):
     def __str__(self):
         return f"{self.alert.title} - {self.get_channel_type_display()}"
 
+
+

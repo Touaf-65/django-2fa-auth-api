@@ -176,3 +176,5 @@ def permission_manager_stats(request):
     serializer = PermissionManagerStatsSerializer(stats)
     return Response(serializer.data)
 
+
+

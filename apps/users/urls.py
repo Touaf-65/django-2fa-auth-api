@@ -65,3 +65,5 @@ urlpatterns = [
     path('blocked/', user_blocked, name='user_blocked'),
 ]
 
+
+

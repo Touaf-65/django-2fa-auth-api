@@ -128,3 +128,5 @@ class UpdatedByManager(BaseManager):
         """Récupère les objets modifiés par plusieurs utilisateurs"""
         return self.filter(updated_by__in=users)
 
+
+

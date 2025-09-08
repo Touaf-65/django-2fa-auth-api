@@ -27,28 +27,36 @@ class MonitoringMiddleware(MiddlewareMixin):
         request.start_time = time.time()
         
         # Enregistrer le début de la requête
-        self.logging_service.info(
-            f"Request started: {request.method} {request.path}",
-            source='api',
-            user=getattr(request, 'user', None),
-            request=request,
-            metadata={
-                'request_id': request.id,
-                'user_agent': request.META.get('HTTP_USER_AGENT', ''),
-                'content_type': request.META.get('CONTENT_TYPE', ''),
-                'content_length': request.META.get('CONTENT_LENGTH', 0),
-            }
-        )
+        user = getattr(request, 'user', None)
+        # Ne pas logger si l'utilisateur est AnonymousUser
+        if user and user.is_authenticated:
+            self.logging_service.info(
+                f"Request started: {request.method} {request.path}",
+                source='api',
+                user=user,
+                request=request,
+                metadata={
+                    'request_id': request.id,
+                    'user_agent': request.META.get('HTTP_USER_AGENT', ''),
+                    'content_type': request.META.get('CONTENT_TYPE', ''),
+                    'content_length': request.META.get('CONTENT_LENGTH', 0),
+                }
+            )
         
-        # Incrémenter le compteur de requêtes
-        self.metrics_service.increment_counter(
-            'api_requests_total',
-            labels={
-                'method': request.method,
-                'endpoint': self._get_endpoint_name(request.path),
-            },
-            request=request,
-        )
+        # Incrémenter le compteur de requêtes (seulement pour les requêtes API)
+        if request.path.startswith('/api/') and not request.path.startswith('/api/monitoring/'):
+            try:
+                self.metrics_service.increment_counter(
+                    'api_requests_total',
+                    labels={
+                        'method': request.method,
+                        'endpoint': self._get_endpoint_name(request.path),
+                    },
+                    request=request,
+                )
+            except Exception:
+                # Ignorer les erreurs de métriques pour éviter les boucles
+                pass
     
     def process_response(self, request, response):
         """Traite la réponse sortante"""
@@ -56,65 +64,91 @@ class MonitoringMiddleware(MiddlewareMixin):
             # Calculer le temps de réponse
             response_time = time.time() - request.start_time
             
-            # Enregistrer le temps de réponse
-            self.performance_service.record_response_time(
-                endpoint=request.path,
-                method=request.method,
-                response_time=response_time,
-                status_code=response.status_code,
-                user=getattr(request, 'user', None),
-                request=request,
-            )
+            # Enregistrer le temps de réponse (seulement pour les requêtes API)
+            if request.path.startswith('/api/') and not request.path.startswith('/api/monitoring/'):
+                user = getattr(request, 'user', None)
+                if user and user.is_authenticated:
+                    try:
+                        self.performance_service.record_response_time(
+                            endpoint=request.path,
+                            method=request.method,
+                            response_time=response_time,
+                            status_code=response.status_code,
+                            user=user,
+                            request=request,
+                        )
+                    except Exception:
+                        # Ignorer les erreurs de métriques pour éviter les boucles
+                        pass
             
-            # Enregistrer les métriques
-            self.metrics_service.record_metric(
-                'api_response_time',
-                value=response_time,
-                labels={
-                    'method': request.method,
-                    'endpoint': self._get_endpoint_name(request.path),
-                    'status_code': str(response.status_code),
-                },
-                request=request,
-            )
+            # Enregistrer les métriques (seulement pour les requêtes API)
+            if request.path.startswith('/api/') and not request.path.startswith('/api/monitoring/'):
+                try:
+                    self.metrics_service.record_metric(
+                        'api_response_time',
+                        value=response_time,
+                        labels={
+                            'method': request.method,
+                            'endpoint': self._get_endpoint_name(request.path),
+                            'status_code': str(response.status_code),
+                        },
+                        request=request,
+                    )
+                except Exception:
+                    # Ignorer les erreurs de métriques pour éviter les boucles
+                    pass
             
-            # Incrémenter le compteur de réponses
-            self.metrics_service.increment_counter(
-                'api_responses_total',
-                labels={
-                    'method': request.method,
-                    'endpoint': self._get_endpoint_name(request.path),
-                    'status_code': str(response.status_code),
-                },
-                request=request,
-            )
+            # Incrémenter le compteur de réponses (seulement pour les requêtes API)
+            if request.path.startswith('/api/') and not request.path.startswith('/api/monitoring/'):
+                try:
+                    self.metrics_service.increment_counter(
+                        'api_responses_total',
+                        labels={
+                            'method': request.method,
+                            'endpoint': self._get_endpoint_name(request.path),
+                            'status_code': str(response.status_code),
+                        },
+                        request=request,
+                    )
+                except Exception:
+                    # Ignorer les erreurs de métriques pour éviter les boucles
+                    pass
             
-            # Enregistrer le taux d'erreur
-            error_count = 1 if response.status_code >= 400 else 0
-            self.performance_service.record_error_rate(
-                endpoint=request.path,
-                method=request.method,
-                error_count=error_count,
-                total_count=1,
-                user=getattr(request, 'user', None),
-                request=request,
-            )
+            # Enregistrer le taux d'erreur (seulement pour les requêtes API)
+            if request.path.startswith('/api/') and not request.path.startswith('/api/monitoring/'):
+                error_count = 1 if response.status_code >= 400 else 0
+                user = getattr(request, 'user', None)
+                if user and user.is_authenticated:
+                    try:
+                        self.performance_service.record_error_rate(
+                            endpoint=request.path,
+                            method=request.method,
+                            error_count=error_count,
+                            total_count=1,
+                            user=user,
+                            request=request,
+                        )
+                    except Exception:
+                        # Ignorer les erreurs de métriques pour éviter les boucles
+                        pass
             
             # Log de la réponse
             log_level = 'ERROR' if response.status_code >= 400 else 'INFO'
-            self.logging_service.log(
-                level=log_level,
-                message=f"Request completed: {request.method} {request.path} - {response.status_code}",
-                source='api',
-                user=getattr(request, 'user', None),
-                request=request,
-                metadata={
-                    'request_id': getattr(request, 'id', ''),
-                    'response_time': response_time,
-                    'status_code': response.status_code,
-                    'content_length': len(response.content) if hasattr(response, 'content') else 0,
-                }
-            )
+            user = getattr(request, 'user', None)
+            if user and user.is_authenticated:
+                self.logging_service.log(
+                    level=log_level,
+                    message=f"Request completed: {request.method} {request.path} - {response.status_code}",
+                    source='api',
+                    user=user,
+                    request=request,
+                    metadata={
+                        'request_id': getattr(request, 'id', ''),
+                        'response_time': response_time,
+                        'status_code': response.status_code,
+                        'content_length': len(response.content) if hasattr(response, 'content') else 0,
+                    }
+                )
         
         return response
     
@@ -124,17 +158,19 @@ class MonitoringMiddleware(MiddlewareMixin):
             response_time = time.time() - request.start_time
             
             # Log de l'exception
-            self.logging_service.log_exception(
-                exception=exception,
-                message=f"Request failed: {request.method} {request.path}",
-                source='api',
-                user=getattr(request, 'user', None),
-                request=request,
-                metadata={
-                    'request_id': getattr(request, 'id', ''),
-                    'response_time': response_time,
-                }
-            )
+            user = getattr(request, 'user', None)
+            if user and user.is_authenticated:
+                self.logging_service.log_exception(
+                    exception=exception,
+                    message=f"Request failed: {request.method} {request.path}",
+                    source='api',
+                    user=user,
+                    request=request,
+                    metadata={
+                        'request_id': getattr(request, 'id', ''),
+                        'response_time': response_time,
+                    }
+                )
             
             # Enregistrer les métriques d'erreur
             self.metrics_service.increment_counter(
@@ -148,14 +184,16 @@ class MonitoringMiddleware(MiddlewareMixin):
             )
             
             # Enregistrer le temps de réponse pour les exceptions
-            self.performance_service.record_response_time(
-                endpoint=request.path,
-                method=request.method,
-                response_time=response_time,
-                status_code=500,
-                user=getattr(request, 'user', None),
-                request=request,
-            )
+            user = getattr(request, 'user', None)
+            if user and user.is_authenticated:
+                self.performance_service.record_response_time(
+                    endpoint=request.path,
+                    method=request.method,
+                    response_time=response_time,
+                    status_code=500,
+                    user=user,
+                    request=request,
+                )
     
     def _get_endpoint_name(self, path):
         """Extrait le nom de l'endpoint à partir du chemin"""
@@ -197,31 +235,35 @@ class PerformanceMonitoringMiddleware(MiddlewareMixin):
             total_time = time.time() - request.performance_start_time
             
             # Enregistrer le temps total de traitement
-            self.performance_service.record_metric(
-                'request_processing_time',
-                value=total_time,
-                labels={
-                    'method': request.method,
-                    'endpoint': self._get_endpoint_name(request.path),
-                    'status_code': str(response.status_code),
-                },
-                user=getattr(request, 'user', None),
-                request=request,
-            )
+            user = getattr(request, 'user', None)
+            if user and user.is_authenticated:
+                self.performance_service.record_metric(
+                    'request_processing_time',
+                    value=total_time,
+                    labels={
+                        'method': request.method,
+                        'endpoint': self._get_endpoint_name(request.path),
+                        'status_code': str(response.status_code),
+                    },
+                    user=user,
+                    request=request,
+                )
             
             # Enregistrer la taille de la réponse
             if hasattr(response, 'content'):
                 response_size = len(response.content)
-                self.performance_service.record_metric(
-                    'response_size_bytes',
-                    value=response_size,
-                    labels={
-                        'method': request.method,
-                        'endpoint': self._get_endpoint_name(request.path),
-                    },
-                    user=getattr(request, 'user', None),
-                    request=request,
-                )
+                user = getattr(request, 'user', None)
+                if user and user.is_authenticated:
+                    self.performance_service.record_metric(
+                        'response_size_bytes',
+                        value=response_size,
+                        labels={
+                            'method': request.method,
+                            'endpoint': self._get_endpoint_name(request.path),
+                        },
+                        user=user,
+                        request=request,
+                    )
         
         return response
     
@@ -265,27 +307,31 @@ class DatabaseMonitoringMiddleware(MiddlewareMixin):
             
             # Enregistrer les métriques
             if db_queries_count > 0:
-                self.metrics_service.record_metric(
-                    'db_queries_count',
-                    value=db_queries_count,
-                    labels={
-                        'method': request.method,
-                        'endpoint': self._get_endpoint_name(request.path),
-                    },
-                    user=getattr(request, 'user', None),
-                    request=request,
-                )
+                user = getattr(request, 'user', None)
+                if user and user.is_authenticated:
+                    self.metrics_service.record_metric(
+                        'db_queries_count',
+                        value=db_queries_count,
+                        labels={
+                            'method': request.method,
+                            'endpoint': self._get_endpoint_name(request.path),
+                        },
+                        user=user,
+                        request=request,
+                    )
                 
-                self.metrics_service.record_metric(
-                    'db_queries_time',
-                    value=db_queries_time,
-                    labels={
-                        'method': request.method,
-                        'endpoint': self._get_endpoint_name(request.path),
-                    },
-                    user=getattr(request, 'user', None),
-                    request=request,
-                )
+                user = getattr(request, 'user', None)
+                if user and user.is_authenticated:
+                    self.metrics_service.record_metric(
+                        'db_queries_time',
+                        value=db_queries_time,
+                        labels={
+                            'method': request.method,
+                            'endpoint': self._get_endpoint_name(request.path),
+                        },
+                        user=user,
+                        request=request,
+                    )
         
         return response
     
@@ -298,3 +344,5 @@ class DatabaseMonitoringMiddleware(MiddlewareMixin):
             endpoint = re.sub(r'/\d+$', '/{id}', endpoint)
             return endpoint
         return path
+
+

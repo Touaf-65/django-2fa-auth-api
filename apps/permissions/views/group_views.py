@@ -316,3 +316,5 @@ def group_role_detail(request, pk):
     serializer = GroupRoleSerializer(group_role)
     return Response(serializer.data)
 
+
+

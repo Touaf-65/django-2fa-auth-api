@@ -437,3 +437,5 @@ def deprecated(reason: str = "Cette fonction est dépréciée"):
         return wrapper
     return decorator
 
+
+

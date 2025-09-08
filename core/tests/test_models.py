@@ -159,3 +159,5 @@ class SoftDeleteModelTest(TestCase):
         with self.assertRaises(TestModel.DoesNotExist):
             TestModel.objects.get(id=obj_id)
 
+
+

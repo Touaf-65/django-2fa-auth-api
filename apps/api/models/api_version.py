@@ -68,3 +68,5 @@ class APIVersion(TimestampedModel):
         """Vérifie si la version est retirée"""
         return self.status == 'retired'
 
+
+

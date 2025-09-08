@@ -292,3 +292,5 @@ class ValidatorsTest(TestCase):
         with self.assertRaises(ValidationError):
             validate_ssn("invalid-ssn", "FR")
 
+
+
