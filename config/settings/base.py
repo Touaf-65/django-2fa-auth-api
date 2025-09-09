@@ -37,19 +37,15 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
 ]
 
-LOCAL_APPS = [
-    'core',
-    'apps.authentication',
-    'apps.users',
-    'apps.notifications',
-    'apps.security',
-    'apps.permissions',
-    'apps.admin_api',
-    'apps.api',
-    'apps.monitoring', # Added for Monitoring App
-]
+# Configuration modulaire des apps
+from .apps_settings import ENABLED_APPS
+
+LOCAL_APPS = ENABLED_APPS
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# Configuration modulaire du middleware
+from .apps_settings import ENABLED_MIDDLEWARE
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -61,19 +57,7 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Middleware de sécurité
-    'apps.security.middleware.IPBlockingMiddleware',
-    'apps.security.middleware.RateLimitMiddleware',
-    'apps.security.middleware.SecurityMiddleware',
-    # Middleware de permissions
-    'apps.permissions.middleware.AuditMiddleware',
-    'apps.permissions.middleware.DelegationMiddleware',
-    'apps.permissions.middleware.PermissionMiddleware',
-    # Middleware de monitoring
-    'apps.monitoring.middleware.monitoring_middleware.MonitoringMiddleware',
-    'apps.monitoring.middleware.monitoring_middleware.PerformanceMonitoringMiddleware',
-    'apps.monitoring.middleware.monitoring_middleware.DatabaseMonitoringMiddleware',
-]
+] + ENABLED_MIDDLEWARE
 
 ROOT_URLCONF = 'config.urls'
 

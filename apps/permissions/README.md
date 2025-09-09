@@ -1,934 +1,641 @@
-# 🛡️ App Permissions - Système de Gestion des Permissions Avancé
+# 🔑 Permissions App
 
-## 📋 Table des Matières
+## Vue d'ensemble
 
-- [Vue d'ensemble](#vue-densemble)
-- [Architecture](#architecture)
-- [Modèles](#modèles)
-- [API Endpoints](#api-endpoints)
-- [Middleware](#middleware)
-- [Décorateurs](#décorateurs)
-- [Utilitaires](#utilitaires)
-- [Exemples d'utilisation](#exemples-dutilisation)
-- [Configuration](#configuration)
-- [Tests](#tests)
+L'app **Permissions** fournit un système de permissions avancé avec support RBAC (Role-Based Access Control) et ABAC (Attribute-Based Access Control), incluant la délégation de permissions et l'audit complet.
 
-## 🎯 Vue d'ensemble
+## 🚀 Fonctionnalités
 
-L'app `permissions` fournit un système de gestion des permissions avancé et granulaire pour Django, incluant :
+### ✅ RBAC (Role-Based Access Control)
+- Rôles hiérarchiques avec permissions
+- Attribution de rôles aux utilisateurs
+- Gestion des groupes d'utilisateurs
+- Permissions granulaires
 
-- **Permissions granulaires** avec contraintes de valeur et conditions
-- **Rôles dynamiques** avec assignation flexible
-- **Groupes d'utilisateurs** avec gestion des membres
-- **Délégations temporaires** de permissions et rôles
-- **Permissions conditionnelles** basées sur le contexte
-- **Gestionnaires de permissions** avec droits spécifiques
-- **Audit complet** de tous les accès
-- **Middleware automatique** pour la vérification des permissions
+### ✅ ABAC (Attribute-Based Access Control)
+- Permissions basées sur les attributs
+- Conditions dynamiques
+- Contexte d'accès avancé
+- Évaluation en temps réel
 
-## 🏗️ Architecture
+### ✅ Délégation de permissions
+- Délégation temporaire de permissions
+- Délégation avec expiration
+- Audit des délégations
+- Révocation des délégations
+
+### ✅ Audit et monitoring
+- Logs complets des accès
+- Traçabilité des actions
+- Rapports de sécurité
+- Alertes de permissions
+
+## 📁 Structure
 
 ```
 apps/permissions/
-├── models/                 # Modèles de données
-│   ├── permission.py       # Permission, ConditionalPermission
-│   ├── role.py            # Role, RolePermission
-│   ├── group.py           # Group, GroupMembership, GroupRole
-│   ├── user_role.py       # UserRole
-│   ├── delegation.py      # PermissionDelegation, RoleDelegation
-│   └── permission_manager.py # PermissionManager
-├── serializers/           # Serializers DRF
-│   ├── permission_serializers.py
-│   ├── role_serializers.py
-│   ├── group_serializers.py
-│   ├── user_role_serializers.py
-│   ├── delegation_serializers.py
-│   └── permission_manager_serializers.py
-├── views/                 # Vues API
-│   ├── permission_views.py
-│   ├── role_views.py
-│   ├── group_views.py
-│   ├── user_role_views.py
-│   ├── delegation_views.py
-│   └── permission_manager_views.py
-├── middleware/            # Middleware de sécurité
-│   ├── permission_middleware.py
-│   ├── delegation_middleware.py
-│   └── audit_middleware.py
-├── utils/                 # Utilitaires
-│   ├── permission_checker.py
-│   ├── delegation_utils.py
-│   └── permission_helpers.py
-├── decorators.py          # Décorateurs pour les vues
-├── urls.py               # Configuration des URLs
-└── README.md             # Cette documentation
+├── models/
+│   ├── permission.py          # Permissions
+│   ├── role.py               # Rôles
+│   ├── group.py              # Groupes
+│   ├── user_role.py          # Rôles utilisateur
+│   ├── permission_delegation.py # Délégation
+│   └── permission_audit.py   # Audit
+├── serializers/
+│   ├── permission_serializers.py # Sérialiseurs permissions
+│   ├── role_serializers.py      # Sérialiseurs rôles
+│   ├── group_serializers.py     # Sérialiseurs groupes
+│   └── delegation_serializers.py # Sérialiseurs délégation
+├── views/
+│   ├── permission_views.py      # Vues permissions
+│   ├── role_views.py           # Vues rôles
+│   ├── group_views.py          # Vues groupes
+│   ├── user_role_views.py      # Vues rôles utilisateur
+│   ├── delegation_views.py     # Vues délégation
+│   └── permission_manager_views.py # Vues gestionnaire
+├── services/
+│   ├── permission_service.py   # Service permissions
+│   ├── role_service.py        # Service rôles
+│   └── delegation_service.py  # Service délégation
+├── utils/
+│   ├── permission_checker.py  # Vérificateur permissions
+│   └── permission_utils.py    # Utilitaires
+├── middleware/
+│   ├── permission_middleware.py # Middleware permissions
+│   └── audit_middleware.py    # Middleware audit
+└── decorators/
+    ├── permission_decorators.py # Décorateurs permissions
+    └── audit_decorators.py     # Décorateurs audit
 ```
 
-## 📊 Modèles
+## 🔧 Configuration
 
-### 🔐 Permission
-Modèle principal pour les permissions granulaires.
+### Variables d'environnement
 
-**Champs :**
-- `name` - Nom de la permission
-- `codename` - Code unique de la permission
-- `description` - Description détaillée
-- `app_label` - Application concernée
-- `model` - Modèle concerné
-- `action` - Action (view, add, change, delete)
-- `field_name` - Champ spécifique (optionnel)
-- `min_value` / `max_value` - Contraintes de valeur
-- `conditions` - Conditions JSON
-- `is_custom` - Permission personnalisée
-- `is_active` - Statut actif
+```env
+# Configuration des permissions
+PERMISSIONS_ENABLED=true
+PERMISSION_CACHE_TTL=300  # 5 minutes
+AUDIT_ENABLED=true
+DELEGATION_ENABLED=true
 
-### 👑 Role
-Rôles avec permissions assignées.
+# Configuration de l'audit
+AUDIT_RETENTION_DAYS=365
+AUDIT_LOG_LEVEL=INFO
+AUDIT_SENSITIVE_ACTIONS=true
+```
 
-**Champs :**
-- `name` - Nom du rôle
-- `description` - Description
-- `permissions` - Permissions assignées (ManyToMany)
-- `is_system` - Rôle système
-- `is_active` - Statut actif
+### Middleware requis
 
-### 👥 Group
-Groupes d'utilisateurs avec rôles.
+```python
+# settings.py
+MIDDLEWARE = [
+    # ... autres middleware
+    'apps.permissions.middleware.permission_middleware.PermissionMiddleware',
+    'apps.permissions.middleware.audit_middleware.AuditMiddleware',
+]
+```
 
-**Champs :**
-- `name` - Nom du groupe
-- `description` - Description
-- `users` - Utilisateurs membres (ManyToMany)
-- `roles` - Rôles assignés (ManyToMany)
-- `is_active` - Statut actif
+## 📡 APIs disponibles
 
-### 🔗 UserRole
-Assignation de rôles aux utilisateurs.
+### 🔑 Gestion des permissions
 
-**Champs :**
-- `user` - Utilisateur
-- `role` - Rôle assigné
-- `is_active` - Statut actif
-- `expires_at` - Date d'expiration
-- `assigned_by` - Utilisateur qui a assigné
-
-### 🔄 PermissionDelegation
-Délégation temporaire de permissions.
-
-**Champs :**
-- `delegator` - Utilisateur qui délègue
-- `delegatee` - Utilisateur qui reçoit
-- `permission` - Permission déléguée
-- `start_date` / `end_date` - Période de délégation
-- `max_uses` - Nombre maximum d'utilisations
-- `current_uses` - Utilisations actuelles
-- `allowed_ips` - IPs autorisées
-- `allowed_actions` - Actions autorisées
-- `conditions` - Conditions supplémentaires
-
-### 🔄 RoleDelegation
-Délégation temporaire de rôles.
-
-**Champs :**
-- `delegator` - Utilisateur qui délègue
-- `delegatee` - Utilisateur qui reçoit
-- `role` - Rôle délégué
-- `excluded_permissions` - Permissions exclues
-- `start_date` / `end_date` - Période de délégation
-- `max_uses` - Nombre maximum d'utilisations
-- `current_uses` - Utilisations actuelles
-- `allowed_ips` - IPs autorisées
-
-### ⚙️ PermissionManager
-Gestionnaires avec droits spécifiques.
-
-**Champs :**
-- `user` - Utilisateur gestionnaire
-- `can_create_permissions` - Peut créer des permissions
-- `can_modify_permissions` - Peut modifier des permissions
-- `can_delete_permissions` - Peut supprimer des permissions
-- `can_create_roles` - Peut créer des rôles
-- `can_modify_roles` - Peut modifier des rôles
-- `can_delete_roles` - Peut supprimer des rôles
-- `can_assign_roles` - Peut assigner des rôles
-- `can_create_groups` - Peut créer des groupes
-- `can_modify_groups` - Peut modifier des groupes
-- `can_delete_groups` - Peut supprimer des groupes
-- `can_manage_groups` - Peut gérer les groupes
-- `can_delegate_permissions` - Peut déléguer des permissions
-- `can_delegate_roles` - Peut déléguer des rôles
-- `max_delegation_duration_days` - Durée max de délégation
-- `max_delegation_uses` - Utilisations max de délégation
-- `allowed_apps` - Applications autorisées
-- `allowed_models` - Modèles autorisés
-
-## 🚀 API Endpoints
-
-### 🔐 Permissions
-
-#### Liste des permissions
+#### Lister les permissions
 ```http
-GET /api/permissions/permissions/
+GET /api/permissions/
+Authorization: Bearer <access_token>
 ```
 
-**Paramètres de requête :**
-- `app_label` - Filtrer par application
-- `model` - Filtrer par modèle
-- `action` - Filtrer par action
-- `is_custom` - Filtrer par type (true/false)
-- `is_active` - Filtrer par statut (true/false)
-- `search` - Recherche textuelle
-- `ordering` - Tri (ex: `app_label,model,action`)
-- `page` - Numéro de page
-- `page_size` - Taille de page
-
-**Réponse :**
+**Réponse:**
 ```json
 {
+  "count": 25,
   "results": [
     {
       "id": 1,
-      "name": "Can view user profile",
-      "codename": "users.userprofile.view",
-      "description": "Permission to view user profiles",
-      "app_label": "users",
-      "model": "userprofile",
-      "action": "view",
-      "field_name": null,
-      "min_value": null,
-      "max_value": null,
-      "conditions": null,
-      "is_custom": false,
-      "is_custom_display": "Système",
-      "is_active": true,
-      "created_by": 1,
-      "created_by_username": "admin@example.com",
-      "created_at": "2025-09-08T10:00:00Z",
-      "updated_at": "2025-09-08T10:00:00Z"
+      "name": "users.view_user",
+      "codename": "view_user",
+      "content_type": "user",
+      "description": "Peut voir les utilisateurs",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "users.create_user",
+      "codename": "create_user",
+      "content_type": "user",
+      "description": "Peut créer des utilisateurs",
+      "created_at": "2024-01-01T00:00:00Z"
     }
-  ],
-  "count": 1,
-  "page": 1,
-  "page_size": 20,
-  "total_pages": 1
+  ]
 }
-```
-
-#### Détails d'une permission
-```http
-GET /api/permissions/permissions/{id}/
 ```
 
 #### Créer une permission
 ```http
-POST /api/permissions/permissions/create/
-```
+POST /api/permissions/
+Authorization: Bearer <access_token>
+Content-Type: application/json
 
-**Corps de la requête :**
-```json
 {
-  "name": "Can modify user salary",
-  "codename": "users.userprofile.change_salary",
-  "description": "Permission to modify user salary field",
-  "app_label": "users",
-  "model": "userprofile",
-  "action": "change",
-  "field_name": "salary",
-  "min_value": 0,
-  "max_value": 100000,
-  "conditions": {
-    "department": "HR",
-    "level": "manager"
-  }
+  "name": "users.edit_user",
+  "codename": "edit_user",
+  "content_type": "user",
+  "description": "Peut modifier les utilisateurs"
 }
 ```
 
-#### Modifier une permission
-```http
-PUT /api/permissions/permissions/{id}/update/
-PATCH /api/permissions/permissions/{id}/update/
-```
+### 👥 Gestion des rôles
 
-#### Supprimer une permission
-```http
-DELETE /api/permissions/permissions/{id}/delete/
-```
-
-#### Statistiques des permissions
-```http
-GET /api/permissions/permissions/stats/
-```
-
-**Réponse :**
-```json
-{
-  "total_permissions": 25,
-  "custom_permissions": 5,
-  "active_permissions": 23,
-  "permissions_by_app": {
-    "users": 10,
-    "permissions": 8,
-    "notifications": 7
-  },
-  "permissions_by_action": {
-    "view": 8,
-    "add": 6,
-    "change": 7,
-    "delete": 4
-  }
-}
-```
-
-### 👑 Rôles
-
-#### Liste des rôles
+#### Lister les rôles
 ```http
 GET /api/permissions/roles/
+Authorization: Bearer <access_token>
 ```
 
-**Paramètres de requête :**
-- `is_system` - Filtrer par type (true/false)
-- `is_active` - Filtrer par statut (true/false)
-- `search` - Recherche textuelle
-- `ordering` - Tri
-- `page` - Numéro de page
-- `page_size` - Taille de page
-
-#### Détails d'un rôle
-```http
-GET /api/permissions/roles/{id}/
+**Réponse:**
+```json
+{
+  "count": 5,
+  "results": [
+    {
+      "id": 1,
+      "name": "admin",
+      "description": "Administrateur système",
+      "permissions": [
+        {
+          "id": 1,
+          "name": "users.view_user",
+          "codename": "view_user"
+        },
+        {
+          "id": 2,
+          "name": "users.create_user",
+          "codename": "create_user"
+        }
+      ],
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ]
+}
 ```
 
 #### Créer un rôle
 ```http
-POST /api/permissions/roles/create/
-```
+POST /api/permissions/roles/
+Authorization: Bearer <access_token>
+Content-Type: application/json
 
-**Corps de la requête :**
-```json
 {
-  "name": "HR Manager",
-  "description": "Human Resources Manager role",
-  "permission_ids": [1, 2, 3, 4],
-  "is_system": false
+  "name": "moderator",
+  "description": "Modérateur du système",
+  "permissions": [1, 2, 3]
 }
 ```
 
-#### Modifier un rôle
+#### Assigner un rôle à un utilisateur
 ```http
-PUT /api/permissions/roles/{id}/update/
-PATCH /api/permissions/roles/{id}/update/
+POST /api/permissions/user-roles/
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "user": 123,
+  "role": 2,
+  "expires_at": "2024-12-31T23:59:59Z"
+}
 ```
 
-#### Supprimer un rôle
-```http
-DELETE /api/permissions/roles/{id}/delete/
-```
+### 👥 Gestion des groupes
 
-#### Statistiques des rôles
-```http
-GET /api/permissions/roles/stats/
-```
-
-#### Permissions d'un rôle
-```http
-GET /api/permissions/roles/{role_id}/permissions/
-```
-
-#### Détails d'une permission de rôle
-```http
-GET /api/permissions/roles/{role_id}/permissions/{permission_id}/
-```
-
-### 👥 Groupes
-
-#### Liste des groupes
+#### Lister les groupes
 ```http
 GET /api/permissions/groups/
-```
-
-#### Détails d'un groupe
-```http
-GET /api/permissions/groups/{id}/
+Authorization: Bearer <access_token>
 ```
 
 #### Créer un groupe
 ```http
-POST /api/permissions/groups/create/
-```
+POST /api/permissions/groups/
+Authorization: Bearer <access_token>
+Content-Type: application/json
 
-**Corps de la requête :**
-```json
 {
-  "name": "Development Team",
-  "description": "Software development team",
-  "role_ids": [1, 2],
-  "user_ids": [1, 2, 3]
+  "name": "developers",
+  "description": "Équipe de développement",
+  "users": [123, 124, 125],
+  "roles": [2, 3]
 }
 ```
 
-#### Modifier un groupe
+### 🔄 Délégation de permissions
+
+#### Déléguer une permission
 ```http
-PUT /api/permissions/groups/{id}/update/
-PATCH /api/permissions/groups/{id}/update/
-```
+POST /api/permissions/delegate/
+Authorization: Bearer <access_token>
+Content-Type: application/json
 
-#### Supprimer un groupe
-```http
-DELETE /api/permissions/groups/{id}/delete/
-```
-
-#### Statistiques des groupes
-```http
-GET /api/permissions/groups/stats/
-```
-
-#### Adhésions aux groupes
-```http
-GET /api/permissions/group-memberships/
-GET /api/permissions/group-memberships/{id}/
-```
-
-#### Rôles des groupes
-```http
-GET /api/permissions/group-roles/
-GET /api/permissions/group-roles/{id}/
-```
-
-### 👤 Rôles Utilisateur
-
-#### Liste des assignations de rôles
-```http
-GET /api/permissions/user-roles/
-```
-
-**Paramètres de requête :**
-- `user_id` - Filtrer par utilisateur
-- `role_id` - Filtrer par rôle
-- `is_active` - Filtrer par statut
-- `ordering` - Tri
-- `page` - Numéro de page
-- `page_size` - Taille de page
-
-#### Détails d'une assignation
-```http
-GET /api/permissions/user-roles/{id}/
-```
-
-#### Assigner un rôle
-```http
-POST /api/permissions/user-roles/create/
-```
-
-**Corps de la requête :**
-```json
 {
-  "user": 1,
-  "role": 2,
-  "expires_at": "2025-12-31T23:59:59Z"
+  "user": 123,
+  "permission": "users.create_user",
+  "expires_at": "2024-12-31T23:59:59Z",
+  "reason": "Formation temporaire"
 }
 ```
 
-#### Modifier une assignation
+#### Révoker une délégation
 ```http
-PUT /api/permissions/user-roles/{id}/update/
-PATCH /api/permissions/user-roles/{id}/update/
+DELETE /api/permissions/delegate/{id}/
+Authorization: Bearer <access_token>
 ```
 
-#### Supprimer une assignation
+### 📊 Audit et statistiques
+
+#### Récupérer l'audit des permissions
 ```http
-DELETE /api/permissions/user-roles/{id}/delete/
+GET /api/permissions/audit/
+Authorization: Bearer <access_token>
 ```
 
-#### Statistiques des assignations
-```http
-GET /api/permissions/user-roles/stats/
-```
-
-### 🔄 Délégations
-
-#### Délégations de permissions
-```http
-GET /api/permissions/permission-delegations/
-GET /api/permissions/permission-delegations/{id}/
-POST /api/permissions/permission-delegations/create/
-POST /api/permissions/permission-delegations/{id}/revoke/
-```
-
-**Créer une délégation :**
+**Réponse:**
 ```json
 {
-  "delegatee": 2,
-  "permission": 1,
-  "start_date": "2025-09-08T10:00:00Z",
-  "end_date": "2025-09-15T18:00:00Z",
-  "max_uses": 10,
-  "allowed_ips": ["192.168.1.100", "10.0.0.50"],
-  "allowed_actions": ["GET", "POST"],
-  "conditions": {
-    "department": "HR",
-    "time_range": "business_hours"
-  }
+  "count": 100,
+  "results": [
+    {
+      "id": 1,
+      "user": {
+        "id": 123,
+        "email": "user@example.com"
+      },
+      "action": "permission_granted",
+      "permission": "users.create_user",
+      "resource": "user",
+      "timestamp": "2024-01-01T10:00:00Z",
+      "ip_address": "192.168.1.100",
+      "user_agent": "Mozilla/5.0...",
+      "success": true
+    }
+  ]
 }
 ```
 
-#### Délégations de rôles
+#### Statistiques des permissions
 ```http
-GET /api/permissions/role-delegations/
-GET /api/permissions/role-delegations/{id}/
-POST /api/permissions/role-delegations/create/
-POST /api/permissions/role-delegations/{id}/revoke/
+GET /api/permissions/stats/
+Authorization: Bearer <access_token>
 ```
 
-**Créer une délégation de rôle :**
+**Réponse:**
 ```json
 {
-  "delegatee": 2,
-  "role": 1,
-  "excluded_permission_ids": [3, 4],
-  "start_date": "2025-09-08T10:00:00Z",
-  "end_date": "2025-09-15T18:00:00Z",
-  "max_uses": 5,
-  "allowed_ips": ["192.168.1.100"]
+  "total_permissions": 25,
+  "total_roles": 5,
+  "total_groups": 3,
+  "active_delegations": 12,
+  "permissions_by_type": {
+    "users": 8,
+    "content": 10,
+    "admin": 7
+  },
+  "recent_activities": [
+    {
+      "action": "role_assigned",
+      "count": 5,
+      "date": "2024-01-01"
+    }
+  ]
 }
 ```
 
-#### Statistiques des délégations
-```http
-GET /api/permissions/delegations/stats/
-```
-
-### ⚙️ Gestionnaires de Permissions
-
-#### Liste des gestionnaires
-```http
-GET /api/permissions/permission-managers/
-```
-
-#### Détails d'un gestionnaire
-```http
-GET /api/permissions/permission-managers/{id}/
-```
-
-#### Créer un gestionnaire
-```http
-POST /api/permissions/permission-managers/create/
-```
-
-**Corps de la requête :**
-```json
-{
-  "user": 2,
-  "can_create_permissions": true,
-  "can_modify_permissions": true,
-  "can_delete_permissions": false,
-  "can_create_roles": true,
-  "can_modify_roles": true,
-  "can_delete_roles": false,
-  "can_assign_roles": true,
-  "can_create_groups": true,
-  "can_modify_groups": true,
-  "can_delete_groups": false,
-  "can_manage_groups": true,
-  "can_delegate_permissions": true,
-  "can_delegate_roles": true,
-  "max_delegation_duration_days": 30,
-  "max_delegation_uses": 100,
-  "allowed_apps": ["users", "permissions"],
-  "allowed_models": ["userprofile", "role"]
-}
-```
-
-#### Modifier un gestionnaire
-```http
-PUT /api/permissions/permission-managers/{id}/update/
-PATCH /api/permissions/permission-managers/{id}/update/
-```
-
-#### Supprimer un gestionnaire
-```http
-DELETE /api/permissions/permission-managers/{id}/delete/
-```
-
-#### Statistiques des gestionnaires
-```http
-GET /api/permissions/permission-managers/stats/
-```
-
-## 🛡️ Middleware
-
-### PermissionMiddleware
-Vérifie automatiquement les permissions sur toutes les requêtes.
-
-**Fonctionnalités :**
-- Vérification automatique basée sur l'URL et la méthode HTTP
-- Support des décorateurs de permissions
-- Génération automatique de permissions
-- Enregistrement des événements de sécurité
-- Headers de réponse informatifs
-
-### DelegationMiddleware
-Gère les délégations de permissions via headers.
-
-**Headers supportés :**
-```http
-X-Use-Delegation: permission:users.userprofile.change
-X-Use-Delegation: role:Manager
-```
-
-### AuditMiddleware
-Enregistre tous les accès pour l'audit.
-
-**Informations trackées :**
-- Utilisateur et IP
-- Permissions et rôles
-- Temps de réponse
-- Délégations utilisées
-- Événements de sécurité
-
-## 🎨 Décorateurs
+## 🛠️ Utilisation dans le code
 
 ### Décorateurs de permissions
+
 ```python
-from apps.permissions.decorators import (
-    permission_required,
-    any_permission_required,
-    all_permissions_required,
-    method_permissions
-)
+from apps.permissions.decorators import permission_required, audit_required
 
-@permission_required('users.userprofile.view')
-def view_profile(request):
-    pass
+@permission_required('users.view_user')
+def view_user(request, user_id):
+    """Vue protégée par permission"""
+    user = get_object_or_404(User, id=user_id)
+    return Response(UserSerializer(user).data)
 
-@any_permission_required(['users.userprofile.view', 'users.userprofile.change'])
-def view_or_edit_profile(request):
-    pass
+@permission_required('users.create_user', audit=True)
+def create_user(request):
+    """Vue avec audit automatique"""
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response(UserSerializer(user).data, status=201)
+    return Response(serializer.errors, status=400)
 
-@method_permissions({
-    'GET': 'users.userprofile.view',
-    'POST': 'users.userprofile.add',
-    'PUT': 'users.userprofile.change',
-    'DELETE': 'users.userprofile.delete'
-})
-def profile_api(request):
-    pass
+@audit_required('users.delete_user')
+def delete_user(request, user_id):
+    """Vue avec audit obligatoire"""
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return Response(status=204)
 ```
 
-### Décorateurs d'audit
+### Vérification de permissions dans les vues
+
 ```python
-from apps.permissions.decorators import audit_required, audit_sensitive
+from apps.permissions.utils import check_permission
 
-@audit_required
-def normal_view(request):
-    pass
-
-@audit_sensitive
-def sensitive_operation(request):
-    pass
+def custom_view(request):
+    # Vérifier une permission
+    if not check_permission(request.user, 'users.view_user'):
+        return Response(
+            {'error': 'Permission refusée'},
+            status=403
+        )
+    
+    # Vérifier une permission avec contexte
+    if not check_permission(
+        request.user, 
+        'users.edit_user',
+        context={'user_id': request.data.get('user_id')}
+    ):
+        return Response(
+            {'error': 'Permission refusée pour cet utilisateur'},
+            status=403
+        )
+    
+    return Response({'message': 'Accès autorisé'})
 ```
 
-### Décorateurs de délégation
+### Service de permissions
+
 ```python
-from apps.permissions.decorators import use_delegation
+from apps.permissions.services import PermissionService
 
-@use_delegation(permission_codename='users.userprofile.change')
-def edit_with_delegation(request):
-    pass
-```
-
-## 🔧 Utilitaires
-
-### Vérification des permissions
-```python
-from apps.permissions.utils import (
-    has_permission,
-    has_any_permission,
-    has_all_permissions,
-    get_user_permissions,
-    get_user_roles
-)
+permission_service = PermissionService()
 
 # Vérifier une permission
-if has_permission(user, 'users.userprofile.view'):
-    # Utilisateur a la permission
-    pass
-
-# Vérifier plusieurs permissions
-if has_any_permission(user, ['users.userprofile.view', 'users.userprofile.change']):
-    # Utilisateur a au moins une permission
-    pass
-
-# Récupérer toutes les permissions d'un utilisateur
-permissions = get_user_permissions(user)
-roles = get_user_roles(user)
-```
-
-### Gestion des délégations
-```python
-from apps.permissions.utils import (
-    create_delegation,
-    revoke_delegation,
-    has_delegated_permission
+has_permission = permission_service.user_has_permission(
+    user=request.user,
+    permission='users.create_user'
 )
 
-# Créer une délégation
-delegation = create_delegation(
-    delegator=admin_user,
-    delegatee=temp_user,
-    permission=permission,
-    start_date=timezone.now(),
-    end_date=timezone.now() + timedelta(days=7),
-    max_uses=10
-)
+# Obtenir les permissions d'un utilisateur
+permissions = permission_service.get_user_permissions(user)
 
-# Vérifier une délégation
-if has_delegated_permission(user, 'users.userprofile.change'):
-    # Utilisateur a la permission via délégation
-    pass
-```
+# Obtenir les rôles d'un utilisateur
+roles = permission_service.get_user_roles(user)
 
-## 📝 Exemples d'utilisation
-
-### Créer un système de permissions complet
-
-```python
-# 1. Créer des permissions granulaires
-from apps.permissions.models import Permission
-
-# Permission pour modifier le salaire
-salary_permission = Permission.objects.create(
-    name="Can modify user salary",
-    codename="users.userprofile.change_salary",
-    description="Permission to modify user salary field",
-    app_label="users",
-    model="userprofile",
-    action="change",
-    field_name="salary",
-    min_value=0,
-    max_value=100000,
-    is_custom=True
-)
-
-# 2. Créer un rôle HR Manager
-from apps.permissions.models import Role
-
-hr_manager_role = Role.objects.create(
-    name="HR Manager",
-    description="Human Resources Manager role",
-    is_system=False
-)
-
-# Assigner des permissions au rôle
-hr_manager_role.add_permission(salary_permission)
-
-# 3. Créer un groupe
-from apps.permissions.models import Group
-
-hr_group = Group.objects.create(
-    name="HR Team",
-    description="Human Resources team"
-)
-
-# Assigner le rôle au groupe
-hr_group.add_role(hr_manager_role)
-
-# 4. Ajouter des utilisateurs au groupe
-from apps.authentication.models import User
-
-hr_user = User.objects.get(email="hr@example.com")
-hr_group.add_user(hr_user)
-
-# 5. Créer une délégation temporaire
-from apps.permissions.models import PermissionDelegation
-from django.utils import timezone
-from datetime import timedelta
-
-delegation = PermissionDelegation.objects.create(
-    delegator=admin_user,
-    delegatee=temp_user,
-    permission=salary_permission,
-    start_date=timezone.now(),
-    end_date=timezone.now() + timedelta(days=7),
-    max_uses=5,
-    allowed_ips=["192.168.1.100"]
+# Déléguer une permission
+delegation = permission_service.delegate_permission(
+    user=target_user,
+    permission='users.create_user',
+    delegated_by=request.user,
+    expires_at=datetime.now() + timedelta(days=7)
 )
 ```
 
-### Utiliser les permissions dans les vues
+### Service de rôles
 
 ```python
-from django.http import JsonResponse
-from apps.permissions.decorators import permission_required, audit_sensitive
-from apps.permissions.utils import has_permission
+from apps.permissions.services import RoleService
 
-@permission_required('users.userprofile.change_salary')
-@audit_sensitive
-def update_user_salary(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    new_salary = request.data.get('salary')
-    
-    # Vérification supplémentaire avec contraintes
-    if has_permission(request.user, 'users.userprofile.change_salary', 
-                     resource=user, context={'salary': new_salary}):
-        user.profile.salary = new_salary
-        user.profile.save()
-        return JsonResponse({'message': 'Salary updated successfully'})
-    else:
-        return JsonResponse({'error': 'Permission denied'}, status=403)
-```
+role_service = RoleService()
 
-### Utiliser les délégations
-
-```python
-# Dans une requête API, utiliser une délégation
-import requests
-
-headers = {
-    'Authorization': 'Bearer your_token',
-    'X-Use-Delegation': 'permission:users.userprofile.change_salary'
-}
-
-response = requests.put(
-    'http://localhost:8000/api/users/profile/1/',
-    json={'salary': 75000},
-    headers=headers
+# Créer un rôle
+role = role_service.create_role(
+    name='moderator',
+    description='Modérateur',
+    permissions=['users.view_user', 'users.edit_user']
 )
+
+# Assigner un rôle
+role_service.assign_role(user, role)
+
+# Révoker un rôle
+role_service.revoke_role(user, role)
 ```
 
-## ⚙️ Configuration
-
-### Settings Django
+### Middleware de permissions
 
 ```python
-# config/settings/base.py
+# Le middleware vérifie automatiquement les permissions
+# selon les décorateurs appliqués aux vues
 
-INSTALLED_APPS = [
-    # ... autres apps
-    'apps.permissions',
-]
-
+# Dans settings.py
 MIDDLEWARE = [
-    # ... autres middlewares
-    'apps.permissions.middleware.AuditMiddleware',
-    'apps.permissions.middleware.DelegationMiddleware',
-    'apps.permissions.middleware.PermissionMiddleware',
+    # ... autres middleware
+    'apps.permissions.middleware.permission_middleware.PermissionMiddleware',
+    'apps.permissions.middleware.audit_middleware.AuditMiddleware',
 ]
 ```
 
-### URLs
+## 🔒 Sécurité et bonnes pratiques
+
+### Hiérarchie des rôles recommandée
 
 ```python
-# config/urls.py
+# Structure de rôles typique
+ROLES_HIERARCHY = {
+    'super_admin': {
+        'permissions': ['*'],  # Toutes les permissions
+        'description': 'Super administrateur'
+    },
+    'admin': {
+        'permissions': [
+            'users.*',
+            'content.*',
+            'settings.view_settings'
+        ],
+        'description': 'Administrateur'
+    },
+    'moderator': {
+        'permissions': [
+            'users.view_user',
+            'users.edit_user',
+            'content.view_content',
+            'content.edit_content'
+        ],
+        'description': 'Modérateur'
+    },
+    'user': {
+        'permissions': [
+            'users.view_own_profile',
+            'users.edit_own_profile'
+        ],
+        'description': 'Utilisateur standard'
+    }
+}
+```
 
-urlpatterns = [
-    # ... autres URLs
-    path('api/permissions/', include('apps.permissions.urls')),
+### Permissions granulaires
+
+```python
+# Exemples de permissions granulaires
+PERMISSIONS = [
+    # Utilisateurs
+    'users.view_user',
+    'users.create_user',
+    'users.edit_user',
+    'users.delete_user',
+    'users.view_own_profile',
+    'users.edit_own_profile',
+    
+    # Contenu
+    'content.view_content',
+    'content.create_content',
+    'content.edit_content',
+    'content.delete_content',
+    'content.publish_content',
+    
+    # Administration
+    'admin.view_dashboard',
+    'admin.manage_users',
+    'admin.manage_settings',
+    'admin.view_logs',
 ]
+```
+
+### Audit des actions sensibles
+
+```python
+from apps.permissions.decorators import audit_sensitive
+
+@audit_sensitive('user_deletion')
+def delete_user(request, user_id):
+    """Suppression d'utilisateur avec audit sensible"""
+    user = get_object_or_404(User, id=user_id)
+    
+    # Log automatique de l'action sensible
+    user.delete()
+    
+    return Response(status=204)
 ```
 
 ## 🧪 Tests
 
-### Tests unitaires
+### Exécuter les tests
+
+```bash
+# Tests unitaires
+python manage.py test apps.permissions
+
+# Tests avec couverture
+coverage run --source='apps.permissions' manage.py test apps.permissions
+coverage report
+```
+
+### Exemples de tests
 
 ```python
-# apps/permissions/tests/test_permissions.py
-
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from apps.permissions.models import Permission, Role, UserRole
-from apps.permissions.utils import has_permission
+from apps.permissions.models import Role, Permission
+from apps.permissions.services import PermissionService
 
 User = get_user_model()
 
-class PermissionTestCase(TestCase):
+class PermissionServiceTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="test@example.com",
-            password="testpass123"
+            email='test@example.com',
+            password='password123'
         )
         self.permission = Permission.objects.create(
-            name="Test Permission",
-            codename="test.permission",
-            app_label="test",
-            model="test",
-            action="view"
+            name='users.view_user',
+            codename='view_user',
+            content_type='user'
         )
         self.role = Role.objects.create(
-            name="Test Role",
-            description="Test role"
+            name='viewer',
+            description='Peut voir les utilisateurs'
         )
-        self.role.add_permission(self.permission)
+        self.role.permissions.add(self.permission)
+        self.service = PermissionService()
     
-    def test_user_has_permission_via_role(self):
-        UserRole.objects.create(
+    def test_user_has_permission(self):
+        # Sans rôle
+        self.assertFalse(
+            self.service.user_has_permission(
+                self.user, 'users.view_user'
+            )
+        )
+        
+        # Avec rôle
+        self.user.roles.add(self.role)
+        self.assertTrue(
+            self.service.user_has_permission(
+                self.user, 'users.view_user'
+            )
+        )
+    
+    def test_delegate_permission(self):
+        delegation = self.service.delegate_permission(
             user=self.user,
-            role=self.role
+            permission='users.create_user',
+            delegated_by=self.user
         )
-        self.assertTrue(has_permission(self.user, 'test.permission'))
-    
-    def test_user_without_permission(self):
-        self.assertFalse(has_permission(self.user, 'test.permission'))
+        
+        self.assertEqual(delegation.user, self.user)
+        self.assertEqual(delegation.permission, 'users.create_user')
+        self.assertTrue(delegation.is_active)
 ```
 
-### Tests d'intégration
+## 📊 Monitoring et analytics
+
+### Métriques disponibles
 
 ```python
-# apps/permissions/tests/test_api.py
+from apps.permissions.models import PermissionAudit
 
-from rest_framework.test import APITestCase
-from rest_framework import status
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
-class PermissionAPITestCase(APITestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
-            email="test@example.com",
-            password="testpass123"
-        )
-        self.client.force_authenticate(user=self.user)
-    
-    def test_list_permissions(self):
-        response = self.client.get('/api/permissions/permissions/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
-    def test_create_permission(self):
-        data = {
-            'name': 'Test Permission',
-            'codename': 'test.permission',
-            'app_label': 'test',
-            'model': 'test',
-            'action': 'view'
-        }
-        response = self.client.post('/api/permissions/permissions/create/', data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+# Statistiques des permissions
+stats = {
+    'total_permissions': Permission.objects.count(),
+    'total_roles': Role.objects.count(),
+    'active_delegations': PermissionDelegation.objects.filter(is_active=True).count(),
+    'failed_permission_checks': PermissionAudit.objects.filter(success=False).count(),
+    'permissions_by_type': Permission.objects.values('content_type').annotate(count=Count('id')),
+}
 ```
 
-## 📚 Ressources supplémentaires
+### Logs d'audit
 
-- [Documentation Django Permissions](https://docs.djangoproject.com/en/stable/topics/auth/default/#permissions)
-- [Django REST Framework Permissions](https://www.django-rest-framework.org/api-guide/permissions/)
-- [Middleware Django](https://docs.djangoproject.com/en/stable/topics/http/middleware/)
+```python
+import logging
 
-## 🤝 Contribution
+# Activer les logs d'audit
+logging.getLogger('apps.permissions.audit').setLevel(logging.INFO)
 
-Pour contribuer à l'app permissions :
+# Les logs incluent:
+# - Tentatives d'accès
+# - Délégations de permissions
+# - Modifications de rôles
+# - Échecs d'authentification
+```
 
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/amazing-feature`)
-3. Commit les changements (`git commit -m 'Add amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrir une Pull Request
+## 🐛 Dépannage
 
-## 📄 Licence
+### Problèmes courants
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+1. **Permission refusée** : Vérifiez les rôles de l'utilisateur
+2. **Délégation expirée** : Vérifiez les dates d'expiration
+3. **Audit non fonctionnel** : Vérifiez la configuration du middleware
+4. **Performance lente** : Activez le cache des permissions
+
+### Configuration de debug
+
+```python
+# settings.py
+DEBUG_PERMISSIONS = True
+PERMISSION_CACHE_DEBUG = True
+AUDIT_DEBUG = True
+```
+
+## 📚 Ressources
+
+- [Django Permissions](https://docs.djangoproject.com/en/stable/topics/auth/default/#permissions)
+- [RBAC vs ABAC](https://en.wikipedia.org/wiki/Role-based_access_control)
+- [OWASP Access Control](https://owasp.org/www-community/controls/Access_Control)
 
 ---
 
-**🛡️ Système de Permissions Avancé - Développé avec ❤️ pour Django**
-
-
-
+*Dernière mise à jour: Septembre 2024*

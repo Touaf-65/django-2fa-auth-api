@@ -1,5 +1,6 @@
 """
 URL configuration for Django 2FA Auth API project.
+Configuration modulaire des URLs basée sur les apps activées.
 """
 
 from django.contrib import admin
@@ -7,6 +8,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+# Configuration modulaire des URLs
+from config.settings.apps_settings import ENABLED_URLS
 
 urlpatterns = [
     # Admin
@@ -17,24 +21,18 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
-    # API Authentication
+    # API Authentication (toujours activée)
     path('api/auth/', include('apps.authentication.urls')),
     
-    # API Users
+    # API Users (toujours activée)
     path('api/users/', include('apps.users.urls')),
-    
-    # API Notifications
-    path('api/notifications/', include('apps.notifications.urls')),
-    
-    # API Permissions
-    path('api/permissions/', include('apps.permissions.urls')),
-    
-    # API Admin
-    path('api/admin/', include('apps.admin_api.urls')),
-    
-    # API Monitoring
-    path('api/monitoring/', include('apps.monitoring.urls')),
 ]
+
+# Ajouter les URLs des apps activées
+for url_config in ENABLED_URLS:
+    urlpatterns.append(
+        path(url_config['path'], include(url_config['include']))
+    )
 
 # Debug toolbar en développement
 if settings.DEBUG:
